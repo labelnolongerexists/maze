@@ -40,14 +40,20 @@ public class Rect {
   public static final boolean hasOverlap(Rect r1, Rect r2) {
     double a = (r1.width + r2.width) / 2, b = (r1.height + r2.height) / 2;
     Point c1 = r1.center(), c2 = r2.center();
-    return ((Math.abs(c1.getX() - c2.getX()) / 2) < a) && ((Math.abs(c1.getY() - c2.getY()) / 2
+    return ((Math.abs(c1.getX() - c2.getX())  ) < a) && ((Math.abs(c1.getY() - c2.getY())  
     ) < b
     );
   }
 
-  public static void main(String[] args) {
-    Rect rect = new Rect(-1, -1, 3, 4);
-    System.out.println(rect.outline());
-    System.out.println(rect.center());
+  public Point getLeftBottom() {
+    return leftBottom;
+  }
+
+  public int getWidth() {
+    return width;
+  }
+
+  public int getHeight() {
+    return height;
   }
 }
