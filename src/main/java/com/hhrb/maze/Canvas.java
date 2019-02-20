@@ -80,6 +80,7 @@ public class Canvas {
   }
 
   public static void main(String[] args) throws IOException {
+
     Canvas canvas = new Canvas(1280, 720);
     for (int i = 0; i < 200; i++) {
       Rect room = canvas.randomNonOverlapRoom();
