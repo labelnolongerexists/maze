@@ -156,18 +156,12 @@ public class RecursiveSplitMaze {
         case WALL_LEFT:
           door = random(cFrom + 1, centerColumn - 1);
           setDoor(centerRow, door);
-          door = random(cFrom + 1, centerColumn - 1);
-          setDoor(centerRow, door);
           break;
         case WALL_TOP:
           door = random(rFrom + 1, centerRow - 1);
           setDoor(door, centerColumn);
-          door = random(rFrom + 1, centerRow - 1);
-          setDoor(door, centerColumn);
           break;
         case WALL_RIGHT:
-          door = random(centerColumn + 1, cTo - 1);
-          setDoor(centerRow, door);
           door = random(centerColumn + 1, cTo - 1);
           setDoor(centerRow, door);
           break;
@@ -211,10 +205,10 @@ public class RecursiveSplitMaze {
   }
 
   public static void main(String[] args) throws Exception {
-    RecursiveSplitMaze maze = new RecursiveSplitMaze(50, 50);
+    RecursiveSplitMaze maze = new RecursiveSplitMaze(50, 13);
     maze.createMaze();
-    maze.dump("/Users/WuZijing/tmp_data/maze/recursive_maze");
-    maze.writeMaze("/Users/WuZijing/tmp_data/maze/recursive_maze");
-//    maze.dump();
+//    maze.dump("/Users/WuZijing/tmp_data/maze/recursive_maze");
+//    maze.writeMaze("/Users/WuZijing/tmp_data/maze/recursive_maze");
+        maze.dump();
   }
 }
