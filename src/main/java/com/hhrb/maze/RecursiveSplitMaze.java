@@ -2,6 +2,9 @@ package com.hhrb.maze;
 
 import com.google.common.collect.Lists;
 
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -22,6 +25,7 @@ public class RecursiveSplitMaze {
   public static final char H_WALL = "@".charAt(0);
   public static final char V_WALL = "@".charAt(0);
 
+  private int brushSize;
   private int rows;
   private int columns;
 
@@ -33,11 +37,12 @@ public class RecursiveSplitMaze {
   private final int WALL_BOTTOM = 3;
   private List<Integer> WALLS = Lists.newArrayList(WALL_LEFT, WALL_TOP, WALL_RIGHT, WALL_BOTTOM);
 
-  public RecursiveSplitMaze(int rowsColumns) {
-    this(rowsColumns, rowsColumns);
+  public RecursiveSplitMaze(int brushSize, int rowsColumns) {
+    this(brushSize, rowsColumns, rowsColumns);
   }
 
-  public RecursiveSplitMaze(int rows, int columns) {
+  public RecursiveSplitMaze(int brushSize, int rows, int columns) {
+    this.brushSize = brushSize;
     this.rows = rows;
     this.columns = columns;
     this.store = new char[rows][columns];
@@ -69,6 +74,10 @@ public class RecursiveSplitMaze {
         pw.write('\n');
       }
     }
+  }
+
+  public boolean isWall(char c) {
+    return c != ROAD;
   }
 
   public void dump() throws IOException {
@@ -145,27 +154,25 @@ public class RecursiveSplitMaze {
       int doorFrom, doorTo, door;
       switch (wallNo) {
         case WALL_LEFT:
-          doorFrom = cFrom + 1;
-          doorTo = centerColumn - 1;
-          door = random(doorFrom, doorTo);
+          door = random(cFrom + 1, centerColumn - 1);
+          setDoor(centerRow, door);
+          door = random(cFrom + 1, centerColumn - 1);
           setDoor(centerRow, door);
           break;
         case WALL_TOP:
-          doorFrom = rFrom + 1;
-          doorTo = centerRow - 1;
-          door = random(doorFrom, doorTo);
+          door = random(rFrom + 1, centerRow - 1);
+          setDoor(door, centerColumn);
+          door = random(rFrom + 1, centerRow - 1);
           setDoor(door, centerColumn);
           break;
         case WALL_RIGHT:
-          doorFrom = centerColumn + 1;
-          doorTo = cTo - 1;
-          door = random(doorFrom, doorTo);
+          door = random(centerColumn + 1, cTo - 1);
+          setDoor(centerRow, door);
+          door = random(centerColumn + 1, cTo - 1);
           setDoor(centerRow, door);
           break;
         case WALL_BOTTOM:
-          doorFrom = centerRow + 1;
-          doorTo = rTo - 1;
-          door = random(doorFrom, doorTo);
+          door = random(centerRow + 1, rTo - 1);
           setDoor(door, centerColumn);
           break;
       }
@@ -178,10 +185,36 @@ public class RecursiveSplitMaze {
     store[rows - 2][columns - 1] = ROAD;
   }
 
-  public static void main(String[] args) throws IOException {
-    RecursiveSplitMaze maze = new RecursiveSplitMaze(100);
+  public void writeMaze(String path) throws Exception {
+    int width = columns * brushSize;
+    int height = rows * brushSize;
+    // 创建BufferedImage对象
+    BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+    // 获取Graphics2D
+    Graphics2D g2d = image.createGraphics();
+    // 画图
+    g2d.setBackground(new Color(200, 200, 200));
+    g2d.setPaint(new Color(100, 100, 100));
+    g2d.clearRect(0, 0, width, height);
+
+    for (int i = 0; i < store.length; i++) {
+      for (int j = 0; j < store[i].length; j++) {
+        if (isWall(store[i][j])) {
+          g2d.fillRect(j * brushSize, i * brushSize, brushSize, brushSize);
+        }
+      }
+    }
+
+    //释放对象
+    g2d.dispose();
+    ImageIO.write(image, "png", new File(path + ".png"));
+  }
+
+  public static void main(String[] args) throws Exception {
+    RecursiveSplitMaze maze = new RecursiveSplitMaze(50, 50);
     maze.createMaze();
-    maze.dump("/Users/WuZijing/tmp_data/maze/recursive_maze.txt");
-    //    maze.dump();
+    maze.dump("/Users/WuZijing/tmp_data/maze/recursive_maze");
+    maze.writeMaze("/Users/WuZijing/tmp_data/maze/recursive_maze");
+//    maze.dump();
   }
 }
