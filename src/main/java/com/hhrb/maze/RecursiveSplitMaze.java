@@ -80,6 +80,10 @@ public class RecursiveSplitMaze {
     return c != ROAD;
   }
 
+  public boolean isRoad(char c) {
+    return c == ROAD;
+  }
+
   public void dump() throws IOException {
     for (int i = 0; i < rows; i++) {
       for (int j = 0; j < columns; j++) {
@@ -94,7 +98,9 @@ public class RecursiveSplitMaze {
   }
 
   private void fillColumn(int rowFrom, int rowTo, int column, char c) {
-    for (int i = rowFrom; i <= rowTo; i++) {
+    int start = isRoad(store[rowFrom - 1][column]) ? rowFrom + 1 : rowFrom;
+    int to = isRoad(store[rowTo + 1][column]) ? rowTo - 1 : rowTo;
+    for (int i = start; i <= to; i++) {
       for (int j = 0; j < columns; j++) {
         store[i][column] = c;
       }
@@ -103,7 +109,9 @@ public class RecursiveSplitMaze {
 
   private void fillRow(int columnFrom, int columnTo, int row, char c) {
     char[] rowStore = store[row];
-    for (int i = columnFrom; i <= columnTo; i++) {
+    int start = isRoad(rowStore[columnFrom - 1]) ? columnFrom + 1 : columnFrom;
+    int to = isRoad(rowStore[columnTo + 1]) ? columnTo - 1 : columnTo;
+    for (int i = start; i <= to; i++) {
       rowStore[i] = c;
     }
   }
@@ -207,8 +215,8 @@ public class RecursiveSplitMaze {
   public static void main(String[] args) throws Exception {
     RecursiveSplitMaze maze = new RecursiveSplitMaze(50, 13);
     maze.createMaze();
-//    maze.dump("/Users/WuZijing/tmp_data/maze/recursive_maze");
-//    maze.writeMaze("/Users/WuZijing/tmp_data/maze/recursive_maze");
-        maze.dump();
+    //    maze.dump("/Users/WuZijing/tmp_data/maze/recursive_maze");
+    //    maze.writeMaze("/Users/WuZijing/tmp_data/maze/recursive_maze");
+    maze.dump();
   }
 }
