@@ -159,23 +159,18 @@ public class RecursiveSplitMaze {
     //    System.out.println("Center=(R:" + centerRow + ",C:" + centerColumn + ")");
     List<Integer> wallsNeed2MakeDoor = randomWalls();
     for (Integer wallNo : wallsNeed2MakeDoor) {
-      int doorFrom, doorTo, door;
       switch (wallNo) {
         case WALL_LEFT:
-          door = random(cFrom + 1, centerColumn - 1);
-          setDoor(centerRow, door);
+          setDoor(centerRow, random(cFrom + 1, centerColumn - 1));
           break;
         case WALL_TOP:
-          door = random(rFrom + 1, centerRow - 1);
-          setDoor(door, centerColumn);
+          setDoor(random(rFrom + 1, centerRow - 1), centerColumn);
           break;
         case WALL_RIGHT:
-          door = random(centerColumn + 1, cTo - 1);
-          setDoor(centerRow, door);
+          setDoor(centerRow, random(centerColumn + 1, cTo - 1));
           break;
         case WALL_BOTTOM:
-          door = random(centerRow + 1, rTo - 1);
-          setDoor(door, centerColumn);
+          setDoor(random(centerRow + 1, rTo - 1), centerColumn);
           break;
       }
     }
@@ -213,10 +208,9 @@ public class RecursiveSplitMaze {
   }
 
   public static void main(String[] args) throws Exception {
-    RecursiveSplitMaze maze = new RecursiveSplitMaze(50, 13);
+    RecursiveSplitMaze maze = new RecursiveSplitMaze(20, 40);
     maze.createMaze();
-    //    maze.dump("/Users/WuZijing/tmp_data/maze/recursive_maze");
-    //    maze.writeMaze("/Users/WuZijing/tmp_data/maze/recursive_maze");
-    maze.dump();
+    maze.dump("/Users/WuZijing/tmp_data/maze/recursive_maze");
+    maze.writeMaze("/Users/WuZijing/tmp_data/maze/recursive_maze");
   }
 }
