@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <charset>UTF-8</charset>
+      <pattern>%magenta(%d{yyyyMMddHHmmss}) %highlight(%-5level) %logger{0} [%red(%thread)]:%msg%n
+      </pattern>
+    </encoder>
+  </appender>
+
+  <!-- 标准 -->
+  <logger name="com.qyer.commons" level="INFO" additivity="false">
+    <appender-ref ref="STDOUT" />
+  </logger>
+  <logger name="com.qyer.dora" level="INFO" additivity="false">
+    <appender-ref ref="STDOUT" />
+  </logger>
+
+</configuration>
