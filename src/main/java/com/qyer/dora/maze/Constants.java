@@ -16,7 +16,7 @@ public class Constants {
     }
   }
 
-  public final Random R = new Random();
+  public static final Random R = new Random();
 
   public static final MazeEnv ENV = new MazeEnv("Dora", "0");
 

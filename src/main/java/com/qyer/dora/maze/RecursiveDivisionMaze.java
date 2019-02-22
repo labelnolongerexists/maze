@@ -3,6 +3,7 @@ package com.qyer.dora.maze;
 import static com.qyer.dora.maze.Constants.ACCESSABLE;
 import static com.qyer.dora.maze.Constants.BLOCK;
 import static com.qyer.dora.maze.Constants.G_WALL;
+import static com.qyer.dora.maze.Constants.R;
 import static com.qyer.dora.maze.Constants.ROAD;
 
 import com.google.common.collect.Lists;
@@ -17,20 +18,19 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
 /**
  * User: Z J Wu Date: 2019-02-20 Time: 18:26 Package: com.hhrb.maze
  */
 public class RecursiveDivisionMaze {
 
-  private final Random R = new Random();
-
   private int brushSize;
   private int rows;
   private int columns;
 
   private byte[][] store;
+
+  private final int MIN = 2;
 
   private final int WALL_LEFT = 0;
   private final int WALL_TOP = 1;
@@ -102,6 +102,9 @@ public class RecursiveDivisionMaze {
   }
 
   private int random(int fromClosed, int toClosed) {
+    if (fromClosed > toClosed) {
+      return fromClosed;
+    }
     return R.nextInt(toClosed + 1 - fromClosed) + fromClosed;
   }
 
@@ -137,7 +140,7 @@ public class RecursiveDivisionMaze {
   }
 
   private boolean canSplit(int a, int b) {
-    return b - a > 4;
+    return (b - a) > (MIN * 2);
   }
 
   private List<Integer> randomWalls() {
@@ -176,8 +179,8 @@ public class RecursiveDivisionMaze {
     }
     // Split area into 4 rooms randomly
     // Randomly choose center point
-    int vWallFrom = cFrom + 2, vWallTo = cTo - 2, centerColumn = random(vWallFrom, vWallTo);
-    int hWallFrom = rFrom + 2, hWallTo = rTo - 2, centerRow = random(hWallFrom, hWallTo);
+    int vWallFrom = cFrom + MIN, vWallTo = cTo - MIN, centerColumn = random(vWallFrom, vWallTo);
+    int hWallFrom = rFrom + MIN, hWallTo = rTo - MIN, centerRow = random(hWallFrom, hWallTo);
 
     // Build horizontally wall
     fillRow(cFrom + 1, cTo - 1, centerRow, BLOCK);
@@ -212,14 +215,19 @@ public class RecursiveDivisionMaze {
     try {
       g2d = image.createGraphics();
       // 画图
-      g2d.setBackground(new Color(200, 200, 200));
-      g2d.setPaint(new Color(100, 100, 100));
+      Color roadC = new Color(150, 150, 150), wallC = new Color(50, 50, 50);
+      g2d.setBackground(wallC);
       g2d.clearRect(0, 0, width, height);
 
+      final int r = brushSize, b = brushSize;
       for (int i = 0; i < store.length; i++) {
         for (int j = 0; j < store[i].length; j++) {
           if (isBlock(store[i][j])) {
-            g2d.fillRect(j * brushSize, i * brushSize, brushSize, brushSize);
+            g2d.setPaint(wallC);
+            g2d.fillRect(j * b, i * b, b, b);
+          } else {
+            g2d.setPaint(roadC);
+            g2d.fillRect(j * r, i * r, r, r);
           }
         }
       }
@@ -237,10 +245,10 @@ public class RecursiveDivisionMaze {
   }
 
   public static void main(String[] args) throws Exception {
-    RecursiveDivisionMaze maze = new RecursiveDivisionMaze(10, 200);
+    RecursiveDivisionMaze maze = new RecursiveDivisionMaze(10, 20);
     maze.createMaze();
-    //    maze.dump();
-    maze.dump("/Users/WuZijing/tmp_data/maze/recursive_maze");
-    maze.writeMaze("/Users/WuZijing/tmp_data/maze/recursive_maze");
+    maze.dump();
+    //    maze.dump("/Users/WuZijing/tmp_data/maze/recursive_maze");
+    //    maze.writeMaze("/Users/WuZijing/tmp_data/maze/recursive_maze");
   }
 }
