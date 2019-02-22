@@ -24,7 +24,7 @@ public class Constants {
   public static final byte BLOCK = 1;
 
   public static final char ROAD = ' ';
-  public static final char G_WALL = "@".charAt(0);
+  public static final char G_WALL = "%".charAt(0);
   public static final char H_WALL = "=".charAt(0);
   public static final char V_WALL = "|".charAt(0);
 

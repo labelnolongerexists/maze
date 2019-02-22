@@ -1,10 +1,7 @@
-package com.qyer.dora.maze;
+package com.qyer.dora.maze.generator;
 
 import static com.qyer.dora.maze.Constants.ACCESSABLE;
 import static com.qyer.dora.maze.Constants.BLOCK;
-import static com.qyer.dora.maze.Constants.G_WALL;
-import static com.qyer.dora.maze.Constants.R;
-import static com.qyer.dora.maze.Constants.ROAD;
 
 import com.google.common.collect.Lists;
 
@@ -12,23 +9,14 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 import java.util.Collections;
 import java.util.List;
 
 /**
  * User: Z J Wu Date: 2019-02-20 Time: 18:26 Package: com.hhrb.maze
  */
-public class RecursiveDivisionMaze {
-
-  private int brushSize;
-  private int rows;
-  private int columns;
-
-  private byte[][] store;
+public class RecursiveDivisionMazeGenerator extends AbstractMazeGenerator {
 
   private final int MIN = 2;
 
@@ -38,74 +26,12 @@ public class RecursiveDivisionMaze {
   private final int WALL_BOTTOM = 3;
   private List<Integer> WALLS = Lists.newArrayList(WALL_LEFT, WALL_TOP, WALL_RIGHT, WALL_BOTTOM);
 
-  public RecursiveDivisionMaze(int brushSize, int rowsColumns) {
-    this(brushSize, rowsColumns, rowsColumns);
+  public RecursiveDivisionMazeGenerator(int brushSize, int rowsColumns) {
+    super(brushSize, rowsColumns);
   }
 
-  public RecursiveDivisionMaze(int brushSize, int rows, int columns) {
-    this.brushSize = brushSize;
-    this.rows = rows;
-    this.columns = columns;
-    this.store = new byte[rows][columns];
-    border();
-  }
-
-  private void border() {
-    for (int i = 0; i < rows; i++) {
-      for (int j = 0; j < columns; j++) {
-        if (i == 0 || i == rows - 1) {
-          store[i][j] = BLOCK;
-          continue;
-        } else if (j == 0 || j == columns - 1) {
-          store[i][j] = BLOCK;
-          continue;
-        }
-        store[i][j] = ACCESSABLE;
-      }
-    }
-  }
-
-  public void dump(String path) throws IOException {
-    File file = new File(path);
-    try (PrintWriter pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(file)))) {
-      for (int i = 0; i < rows; i++) {
-        for (int j = 0; j < columns; j++) {
-          pw.write(store[i][j]);
-        }
-        pw.write('\n');
-      }
-    }
-  }
-
-  public boolean isBlock(int i) {
-    return i != ACCESSABLE;
-  }
-
-  public boolean isAccessable(int i) {
-    return i == ACCESSABLE;
-  }
-
-  public void dump() throws IOException {
-    for (int i = 0; i < rows; i++) {
-      for (int j = 0; j < columns; j++) {
-        switch (store[i][j]) {
-          case ACCESSABLE:
-            System.out.print(ROAD);
-            break;
-          case BLOCK:
-            System.out.print(G_WALL);
-            break;
-        }
-      }
-      System.out.println();
-    }
-  }
-
-  private int random(int fromClosed, int toClosed) {
-    if (fromClosed > toClosed) {
-      return fromClosed;
-    }
-    return R.nextInt(toClosed + 1 - fromClosed) + fromClosed;
+  public RecursiveDivisionMazeGenerator(int brushSize, int rows, int columns) {
+    super(brushSize, rows, columns);
   }
 
   private void fillColumn(int rowFrom, int rowTo, int column, byte entity) {
@@ -158,16 +84,16 @@ public class RecursiveDivisionMaze {
     for (Integer wallId : wallIds) {
       switch (wallId) {
         case WALL_LEFT:
-          setDoor(centerRow, random(cFrom + 1, centerColumn - 1));
+          setDoor(centerRow, closedRandom(cFrom + 1, centerColumn - 1));
           break;
         case WALL_TOP:
-          setDoor(random(rFrom + 1, centerRow - 1), centerColumn);
+          setDoor(closedRandom(rFrom + 1, centerRow - 1), centerColumn);
           break;
         case WALL_RIGHT:
-          setDoor(centerRow, random(centerColumn + 1, cTo - 1));
+          setDoor(centerRow, closedRandom(centerColumn + 1, cTo - 1));
           break;
         case WALL_BOTTOM:
-          setDoor(random(centerRow + 1, rTo - 1), centerColumn);
+          setDoor(closedRandom(centerRow + 1, rTo - 1), centerColumn);
           break;
       }
     }
@@ -179,8 +105,9 @@ public class RecursiveDivisionMaze {
     }
     // Split area into 4 rooms randomly
     // Randomly choose center point
-    int vWallFrom = cFrom + MIN, vWallTo = cTo - MIN, centerColumn = random(vWallFrom, vWallTo);
-    int hWallFrom = rFrom + MIN, hWallTo = rTo - MIN, centerRow = random(hWallFrom, hWallTo);
+    int vWallFrom = cFrom + MIN, vWallTo = cTo - MIN, centerColumn = closedRandom(vWallFrom,
+                                                                                  vWallTo);
+    int hWallFrom = rFrom + MIN, hWallTo = rTo - MIN, centerRow = closedRandom(hWallFrom, hWallTo);
 
     // Build horizontally wall
     fillRow(cFrom + 1, cTo - 1, centerRow, BLOCK);
@@ -200,11 +127,6 @@ public class RecursiveDivisionMaze {
     //    System.out.println("Center=(R:" + centerRow + ",C:" + centerColumn + ")");
   }
 
-  private void setEntranceExit() {
-    store[1][0] = ACCESSABLE;
-    store[rows - 2][columns - 1] = ACCESSABLE;
-  }
-
   public BufferedImage makeImage() {
     int width = columns * brushSize;
     int height = rows * brushSize;
@@ -222,7 +144,7 @@ public class RecursiveDivisionMaze {
       final int r = brushSize, b = brushSize;
       for (int i = 0; i < store.length; i++) {
         for (int j = 0; j < store[i].length; j++) {
-          if (isBlock(store[i][j])) {
+          if (isWall(store[i][j])) {
             g2d.setPaint(wallC);
             g2d.fillRect(j * b, i * b, b, b);
           } else {
@@ -245,10 +167,12 @@ public class RecursiveDivisionMaze {
   }
 
   public static void main(String[] args) throws Exception {
-    RecursiveDivisionMaze maze = new RecursiveDivisionMaze(10, 20);
+    int step = 40;
+    RecursiveDivisionMazeGenerator maze = new RecursiveDivisionMazeGenerator(10, step,
+                                                                             (int) (step * 2.5));
     maze.createMaze();
-    maze.dump();
-    //    maze.dump("/Users/WuZijing/tmp_data/maze/recursive_maze");
+    //    maze.dump();
+    maze.dump("/Users/WuZijing/tmp_data/maze/recursive_maze");
     //    maze.writeMaze("/Users/WuZijing/tmp_data/maze/recursive_maze");
   }
 }

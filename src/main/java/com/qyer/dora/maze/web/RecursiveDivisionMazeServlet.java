@@ -11,7 +11,7 @@ import com.google.inject.name.Named;
 import com.qyer.commons.param.BasicHttpParameter;
 import com.qyer.commons.web.BasicAsyncServlet;
 import com.qyer.commons.web.ServletConfig;
-import com.qyer.dora.maze.RecursiveDivisionMaze;
+import com.qyer.dora.maze.generator.RecursiveDivisionMazeGenerator;
 import com.qyer.dora.maze.Utils;
 
 import javax.servlet.http.HttpServletRequest;
@@ -55,7 +55,7 @@ public class RecursiveDivisionMazeServlet extends BasicAsyncServlet<BasicHttpPar
     } else if (brush > BRUSH_THICK) {
       brush = BRUSH_THICK;
     }
-    RecursiveDivisionMaze maze = new RecursiveDivisionMaze(brush, height, width);
+    RecursiveDivisionMazeGenerator maze = new RecursiveDivisionMazeGenerator(brush, height, width);
     maze.createMaze();
     BufferedImage image = maze.makeImage();
     Utils.writeImage(image, "png", resp.getOutputStream());
