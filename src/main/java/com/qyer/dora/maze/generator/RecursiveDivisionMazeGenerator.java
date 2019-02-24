@@ -5,10 +5,6 @@ import static com.qyer.dora.maze.Constants.BLOCK;
 
 import com.google.common.collect.Lists;
 
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
@@ -27,16 +23,18 @@ public class RecursiveDivisionMazeGenerator extends AbstractMazeGenerator {
   private List<Integer> WALLS = Lists.newArrayList(WALL_LEFT, WALL_TOP, WALL_RIGHT, WALL_BOTTOM);
 
   public RecursiveDivisionMazeGenerator(int brushSize, int rowsColumns) {
-    super(brushSize, rowsColumns);
+    this(brushSize, rowsColumns, rowsColumns);
   }
 
   public RecursiveDivisionMazeGenerator(int brushSize, int rows, int columns) {
     super(brushSize, rows, columns);
+    border(BLOCK);
+    fill(ACCESSABLE, 1, rows - 1, 1, columns - 1);
   }
 
   private void fillColumn(int rowFrom, int rowTo, int column, byte entity) {
-    int start = isAccessable(store[rowFrom - 1][column]) ? rowFrom + 1 : rowFrom;
-    int to = isAccessable(store[rowTo + 1][column]) ? rowTo - 1 : rowTo;
+    int start = isAccessible(store[rowFrom - 1][column]) ? rowFrom + 1 : rowFrom;
+    int to = isAccessible(store[rowTo + 1][column]) ? rowTo - 1 : rowTo;
     for (int i = start; i <= to; i++) {
       for (int j = 0; j < columns; j++) {
         store[i][column] = entity;
@@ -47,12 +45,12 @@ public class RecursiveDivisionMazeGenerator extends AbstractMazeGenerator {
   private void fillRow(int columnFrom, int columnTo, int row, byte entity) {
     byte[] rowStore = store[row];
     int start;
-    if (isAccessable(rowStore[columnFrom - 1]))
+    if (isAccessible(rowStore[columnFrom - 1]))
       start = columnFrom + 1;
     else
       start = columnFrom;
     int to;
-    if (isAccessable(rowStore[columnTo + 1]))
+    if (isAccessible(rowStore[columnTo + 1]))
       to = columnTo - 1;
     else
       to = columnTo;
@@ -125,45 +123,6 @@ public class RecursiveDivisionMazeGenerator extends AbstractMazeGenerator {
     // RightBottomArea
     createMaze(centerRow, rTo, centerColumn, cTo);
     //    System.out.println("Center=(R:" + centerRow + ",C:" + centerColumn + ")");
-  }
-
-  public BufferedImage makeImage() {
-    int width = columns * brushSize;
-    int height = rows * brushSize;
-    // 创建BufferedImage对象
-    BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-    // 获取Graphics2D
-    Graphics2D g2d = null;
-    try {
-      g2d = image.createGraphics();
-      // 画图
-      Color roadC = new Color(150, 150, 150), wallC = new Color(50, 50, 50);
-      g2d.setBackground(wallC);
-      g2d.clearRect(0, 0, width, height);
-
-      final int r = brushSize, b = brushSize;
-      for (int i = 0; i < store.length; i++) {
-        for (int j = 0; j < store[i].length; j++) {
-          if (isWall(store[i][j])) {
-            g2d.setPaint(wallC);
-            g2d.fillRect(j * b, i * b, b, b);
-          } else {
-            g2d.setPaint(roadC);
-            g2d.fillRect(j * r, i * r, r, r);
-          }
-        }
-      }
-    } finally {
-      //释放对象
-      if (g2d != null) {
-        g2d.dispose();
-      }
-    }
-    return image;
-  }
-
-  public void writeMaze(String path) throws Exception {
-    ImageIO.write(makeImage(), "png", new File(path + ".png"));
   }
 
   public static void main(String[] args) throws Exception {

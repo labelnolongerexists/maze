@@ -2,12 +2,17 @@ package com.qyer.dora.maze.generator;
 
 import static com.qyer.dora.maze.Constants.ACCESSABLE;
 import static com.qyer.dora.maze.Constants.BLOCK;
+import static com.qyer.dora.maze.Constants.C_ACCESSIBLE;
+import static com.qyer.dora.maze.Constants.C_BLOCKED;
 import static com.qyer.dora.maze.Constants.G_WALL;
 import static com.qyer.dora.maze.Constants.R;
 import static com.qyer.dora.maze.Constants.ROAD;
 
 import com.qyer.dora.shape.RCPoint;
 
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -17,7 +22,7 @@ import java.io.PrintWriter;
 /**
  * User: Z J Wu Date: 2019-02-22 Time: 13:45 Package: com.qyer.dora.maze.generator
  */
-public class AbstractMazeGenerator {
+public abstract class AbstractMazeGenerator {
 
   protected int brushSize;
   protected int rows;
@@ -33,37 +38,49 @@ public class AbstractMazeGenerator {
     this.rows = rows;
     this.columns = columns;
     this.store = new byte[rows][columns];
-    border();
   }
 
-  protected void border() {
+  protected void border(byte border) {
     for (int i = 0; i < rows; i++) {
       for (int j = 0; j < columns; j++) {
         if (i == 0 || i == rows - 1) {
-          store[i][j] = BLOCK;
-          continue;
+          store[i][j] = border;
         } else if (j == 0 || j == columns - 1) {
-          store[i][j] = BLOCK;
-          continue;
+          store[i][j] = border;
         }
-        store[i][j] = ACCESSABLE;
       }
     }
   }
 
-  protected void fillWith(byte type) {
-    for (int i = 0; i < rows; i++) {
-      for (int j = 0; j < columns; j++) {
+  protected void fill(byte type, int rowFrom, int rowTo, int columnFrom, int columnTo) {
+    for (int i = rowFrom; i < rowTo; i++) {
+      for (int j = columnFrom; j < columnTo; j++) {
         store[i][j] = type;
       }
     }
   }
 
-  public boolean isWall(byte b) {
+  protected int firstRow() {
+    return 0;
+  }
+
+  protected int firstColumn() {
+    return 0;
+  }
+
+  protected int lastRow() {
+    return rows - 1;
+  }
+
+  protected int lastColumn() {
+    return columns - 1;
+  }
+
+  public boolean isBlocked(byte b) {
     return b != ACCESSABLE;
   }
 
-  public boolean isAccessable(byte b) {
+  public boolean isAccessible(byte b) {
     return b == ACCESSABLE;
   }
 
@@ -121,5 +138,52 @@ public class AbstractMazeGenerator {
     }
     return R.nextInt(toClosed + 1 - fromClosed) + fromClosed;
   }
+
+  public BufferedImage makeImage() {
+    int width = columns * brushSize;
+    int height = rows * brushSize;
+    int border = 5;
+
+    // 创建BufferedImage对象
+    BufferedImage image = new BufferedImage(width + border * 2, height + border * 2,
+                                            BufferedImage.TYPE_INT_RGB);
+    // 获取Graphics2D
+    Graphics2D g2d = null;
+    try {
+      g2d = image.createGraphics();
+      // 画图
+      g2d.setBackground(C_ACCESSIBLE);
+      g2d.clearRect(0, 0, width + border * 2, height + border * 2);
+
+      final int b = brushSize;
+      for (int i = 0; i < store.length; i++) {
+        for (int j = 0; j < store[i].length; j++) {
+          if (isBlocked(store[i][j])) {
+            g2d.setPaint(C_BLOCKED);
+            g2d.fillRect(border + j * b, border + i * b, b, b);
+          } else {
+            g2d.setPaint(C_ACCESSIBLE);
+            g2d.fillRect(border + j * b, border + i * b, b, b);
+          }
+        }
+        g2d.setPaint(C_ACCESSIBLE);
+        g2d.fillRect(border + store[i].length * b, border + i * b, b, b);
+      }
+      g2d.setPaint(C_ACCESSIBLE);
+      g2d.fillRect(height + border, 0, width, border);
+    } finally {
+      //释放对象
+      if (g2d != null) {
+        g2d.dispose();
+      }
+    }
+    return image;
+  }
+
+  public void writeMaze(String path) throws Exception {
+    ImageIO.write(makeImage(), "png", new File(path + ".png"));
+  }
+
+  public abstract void createMaze() throws Exception;
 
 }

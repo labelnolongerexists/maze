@@ -6,10 +6,16 @@ import static com.qyer.dora.maze.Constants.R;
 
 import com.google.common.collect.Lists;
 import com.qyer.dora.maze.Constants;
+import com.qyer.dora.maze.Utils;
 import com.qyer.dora.shape.RCPoint;
+import com.qyer.dora.shape.RCSegment;
 import org.apache.commons.collections4.CollectionUtils;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -24,8 +30,6 @@ public class PrimMazeGenerator extends AbstractMazeGenerator {
   private static final int D_RIGHT = 2;
   private static final int D_BOTTOM = 3;
 
-  private final List<Integer> DIRECTIONS = Lists.newArrayList(D_LEFT, D_TOP, D_RIGHT, D_BOTTOM);
-
   public PrimMazeGenerator(int brushSize, int rowsColumns) {
     this(brushSize, rowsColumns, rowsColumns);
   }
@@ -33,7 +37,17 @@ public class PrimMazeGenerator extends AbstractMazeGenerator {
   public PrimMazeGenerator(int brushSize, int rows, int columns) {
     super(brushSize, ((rows % 2) == 0) ? (rows + 1) : rows,
           ((columns % 2) == 0) ? (columns + 1) : columns);
-    fillWith(BLOCK);
+    fill(BLOCK, 0, rows, 0, columns);
+  }
+
+  public static final PrimMazeGenerator createGenerator(int brushSize, int rowsColumns) {
+    return createGenerator(brushSize, rowsColumns, rowsColumns);
+  }
+
+  public static final PrimMazeGenerator createGenerator(int brushSize, int rows, int columns) {
+    int r = ((rows % 2) == 0) ? (rows + 1) : rows;
+    int c = ((columns % 2) == 0) ? (columns + 1) : columns;
+    return new PrimMazeGenerator(brushSize, r, c);
   }
 
   private void tryAddPoint(LinkedBlockingQueue<RCPoint> q, Set<RCPoint> visited, RCPoint p) {
@@ -43,34 +57,38 @@ public class PrimMazeGenerator extends AbstractMazeGenerator {
     q.add(p);
   }
 
-  public void createMaze() {
+  public void createMaze() throws IOException {
     int s = 2;
-    final List<RCPoint[]> candidate = Lists.newLinkedList();
-    int r = closedRandom(2, rows - 3), c = closedRandom(2, columns - 3);
-    candidate.add(new RCPoint[]{new RCPoint(r, c), new RCPoint(r, c)});
+    final List<RCSegment> candidate = Lists.newLinkedList();
+    int row = closedRandom(s, rows - 1 - s), col = closedRandom(s, columns - 1 - s);
+    RCPoint initPoint = new RCPoint(1, 1);
+
+    candidate.add(new RCSegment(initPoint, initPoint));
     while (CollectionUtils.isNotEmpty(candidate)) {
-      RCPoint[] segment = candidate.remove(R.nextInt(candidate.size()));
-      RCPoint p1 = segment[0], p2 = segment[1];
-      if (isAccessable(getContent(p2))) {
+      RCSegment rcSegment = candidate.remove(R.nextInt(candidate.size()));
+      RCPoint frontier = rcSegment.getFrom(), wall = rcSegment.getTo();
+      if (isAccessible(getContent(frontier))) {
         continue;
       }
-      updateMazePoint(p1, Constants.ACCESSABLE);
-      updateMazePoint(p2, Constants.ACCESSABLE);
-      r = p2.getRow();
-      c = p2.getColumn();
-      if (r > s && isWall(getContent(r - s, c))) {
-        candidate.add(new RCPoint[]{new RCPoint(r - s + 1, c), new RCPoint(r - s, c)});
+      updateMazePoint(frontier, Constants.ACCESSABLE);
+      updateMazePoint(wall, Constants.ACCESSABLE);
+      row = frontier.getRow();
+      col = frontier.getColumn();
+      if (row >= firstRow() + s && isBlocked(getContent(row - s, col))) {
+        candidate.add(new RCSegment(new RCPoint(row - s, col), new RCPoint(row - s + 1, col)));
       }
-      if (c > s && isWall(getContent(r, c - s))) {
-        candidate.add(new RCPoint[]{new RCPoint(r, c + 1 - s), new RCPoint(r, c - s)});
+      if (col >= firstColumn() + s && isBlocked(getContent(row, col - s))) {
+        candidate.add(new RCSegment(new RCPoint(row, col - s), new RCPoint(row, col - s + 1)));
       }
-      if (r < rows - 1 - s && isWall(getContent(r + s, c))) {
-        candidate.add(new RCPoint[]{new RCPoint(r + s - 1, c), new RCPoint(r + s, c)});
+
+      if (row <= lastRow() - s && isBlocked(getContent(row + s, col))) {
+        candidate.add(new RCSegment(new RCPoint(row + s, col), new RCPoint(row + s - 1, col)));
       }
-      if (c < columns - 1 - s && isWall(getContent(r, c + s))) {
-        candidate.add(new RCPoint[]{new RCPoint(r, c + s - 1), new RCPoint(r, c + s)});
+      if (col <= lastColumn() - s && isBlocked(getContent(row, col + s))) {
+        candidate.add(new RCSegment(new RCPoint(row, col + s), new RCPoint(row, col + s - 1)));
       }
     }
+    border(BLOCK);
     setEntranceExit();
   }
 
@@ -79,8 +97,11 @@ public class PrimMazeGenerator extends AbstractMazeGenerator {
   }
 
   public static void main(String[] args) throws IOException {
-    PrimMazeGenerator pmg = new PrimMazeGenerator(BRUSH_MIDDLE, 20);
-    pmg.createMaze();
-    pmg.dump();
+    PrimMazeGenerator maze = PrimMazeGenerator.createGenerator(BRUSH_MIDDLE, 80);
+    maze.createMaze();
+    BufferedImage image = maze.makeImage();
+    try (OutputStream os = new FileOutputStream(new File("d:/maze.png"))) {
+      Utils.writeImage(image, "png", os);
+    }
   }
 }

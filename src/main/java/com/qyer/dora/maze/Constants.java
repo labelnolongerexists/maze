@@ -1,5 +1,6 @@
 package com.qyer.dora.maze;
 
+import java.awt.*;
 import java.util.Random;
 
 /**
@@ -16,7 +17,7 @@ public class Constants {
   public static final byte BLOCK = 1;
 
   public static final char ROAD = ' ';
-  public static final char G_WALL = "%".charAt(0);
+  public static final char G_WALL = "#".charAt(0);
   public static final char H_WALL = "=".charAt(0);
   public static final char V_WALL = "|".charAt(0);
 
@@ -24,4 +25,10 @@ public class Constants {
   public static final int BRUSH_MIDDLE = 10;
   public static final int BRUSH_THICK = 20;
 
+  private static final int C1 = 0x1e;
+  private static final int C2 = 0xda;
+
+  public static final Color C_BACKGROUND = new Color(255, 255, 255);
+  public static final Color C_BLOCKED = new Color(11, 52, 110);
+  public static final Color C_ACCESSIBLE = new Color(189, 192, 186);
 }
