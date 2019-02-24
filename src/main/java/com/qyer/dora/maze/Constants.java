@@ -1,7 +1,5 @@
 package com.qyer.dora.maze;
 
-import com.qyer.commons.utils.Environment;
-
 import java.util.Random;
 
 /**
@@ -9,16 +7,10 @@ import java.util.Random;
  */
 public class Constants {
 
-  public static class MazeEnv extends Environment {
-
-    public MazeEnv(String projectName, String instanceId) {
-      super(projectName, instanceId);
-    }
-  }
+  public static final int DEFAULT_MAZE_WIDTH = 200;
+  public static final int DEFAULT_MAZE_HEIGHT = 200;
 
   public static final Random R = new Random();
-
-  public static final MazeEnv ENV = new MazeEnv("Dora", "0");
 
   public static final byte ACCESSABLE = 0;
   public static final byte BLOCK = 1;

@@ -2,7 +2,7 @@ package com.qyer.dora.maze.web;
 
 import com.google.inject.Injector;
 import com.google.inject.servlet.GuiceServletContextListener;
-import com.qyer.commons.utils.CommonUtils;
+import com.qyer.dora.maze.Utils;
 import com.qyer.dora.maze.di.InjectorHolder;
 
 import javax.servlet.ServletContextEvent;
@@ -19,12 +19,12 @@ public class ContextListener extends GuiceServletContextListener {
 
   @Override
   public void contextInitialized(ServletContextEvent servletContextEvent) {
-    Injector injector=getInjector();
-    CommonUtils.printFileContentInClassPath("./hello");
+    Injector injector = getInjector();
+    Utils.printFileContentInClassPath("./hello");
   }
 
   @Override
   public void contextDestroyed(ServletContextEvent servletContextEvent) {
-    CommonUtils.printFileContentInClassPath("./bye");
+    Utils.printFileContentInClassPath("./bye");
   }
 }

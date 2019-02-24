@@ -2,7 +2,9 @@ package com.qyer.dora.maze;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 
 /**
@@ -13,5 +15,17 @@ public class Utils {
   public static final void writeImage(BufferedImage image, String format,
                                       OutputStream outputStream) throws IOException {
     ImageIO.write(image, format, outputStream);
+  }
+
+  public static final void printFileContentInClassPath(String filePath) {
+    try (BufferedReader br = new BufferedReader(
+      new InputStreamReader(Utils.class.getClassLoader().getResourceAsStream(filePath)))) {
+      String line;
+      while ((line = br.readLine()) != null) {
+        System.out.println(line);
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 }
