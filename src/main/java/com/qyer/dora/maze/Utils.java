@@ -1,5 +1,7 @@
 package com.qyer.dora.maze;
 
+import static com.qyer.dora.maze.Constants.R;
+
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
@@ -11,6 +13,13 @@ import java.io.OutputStream;
  * User: Z J Wu Date: 2019-02-22 Time: 10:58 Package: com.qyer.dora.maze
  */
 public class Utils {
+
+  public static final int closedRandom(int fromClosed, int toClosed) {
+    if (fromClosed > toClosed) {
+      return fromClosed;
+    }
+    return R.nextInt(toClosed + 1 - fromClosed) + fromClosed;
+  }
 
   public static final void writeImage(BufferedImage image, String format,
                                       OutputStream outputStream) throws IOException {

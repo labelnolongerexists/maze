@@ -5,10 +5,7 @@ import static com.qyer.dora.maze.Constants.BLOCK;
 import static com.qyer.dora.maze.Constants.C_ACCESSIBLE;
 import static com.qyer.dora.maze.Constants.C_BLOCKED;
 import static com.qyer.dora.maze.Constants.G_WALL;
-import static com.qyer.dora.maze.Constants.R;
 import static com.qyer.dora.maze.Constants.ROAD;
-
-import com.qyer.dora.shape.RCPoint;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -25,9 +22,7 @@ import java.io.PrintWriter;
 public abstract class AbstractMazeGenerator {
 
   protected int brushSize;
-  protected int rows;
-  protected int columns;
-  protected byte[][] store;
+  protected Maze maze;
 
   public AbstractMazeGenerator(int brushSize, int rowsColumns) {
     this(brushSize, rowsColumns, rowsColumns);
@@ -35,74 +30,31 @@ public abstract class AbstractMazeGenerator {
 
   public AbstractMazeGenerator(int brushSize, int rows, int columns) {
     this.brushSize = brushSize;
-    this.rows = rows;
-    this.columns = columns;
-    this.store = new byte[rows][columns];
+    this.maze = new Maze(rows, columns);
   }
 
-  protected void border(byte border) {
-    for (int i = 0; i < rows; i++) {
-      for (int j = 0; j < columns; j++) {
-        if (i == 0 || i == rows - 1) {
-          store[i][j] = border;
-        } else if (j == 0 || j == columns - 1) {
-          store[i][j] = border;
-        }
-      }
-    }
+  public int getBrushSize() {
+    return brushSize;
   }
 
-  protected void fill(byte type, int rowFrom, int rowTo, int columnFrom, int columnTo) {
-    for (int i = rowFrom; i < rowTo; i++) {
-      for (int j = columnFrom; j < columnTo; j++) {
-        store[i][j] = type;
-      }
-    }
+  public void setBrushSize(int brushSize) {
+    this.brushSize = brushSize;
   }
 
-  protected int firstRow() {
-    return 0;
+  public Maze getMaze() {
+    return maze;
   }
 
-  protected int firstColumn() {
-    return 0;
-  }
-
-  protected int lastRow() {
-    return rows - 1;
-  }
-
-  protected int lastColumn() {
-    return columns - 1;
-  }
-
-  public boolean isBlocked(byte b) {
-    return b != ACCESSABLE;
-  }
-
-  public boolean isAccessible(byte b) {
-    return b == ACCESSABLE;
-  }
-
-  public byte getContent(RCPoint point) {
-    return store[point.getRow()][point.getColumn()];
-  }
-
-  protected void setEntranceExit() {
-    store[1][0] = ACCESSABLE;
-    store[rows - 2][columns - 1] = ACCESSABLE;
-  }
-
-  public byte getContent(int r, int c) {
-    return store[r][c];
+  public void setMaze(Maze maze) {
+    this.maze = maze;
   }
 
   public void dump(String path) throws IOException {
     File file = new File(path);
     try (PrintWriter pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(file)))) {
-      for (int i = 0; i < rows; i++) {
-        for (int j = 0; j < columns; j++) {
-          switch (store[i][j]) {
+      for (int i = 0; i < maze.getRows(); i++) {
+        for (int j = 0; j < maze.getColumns(); j++) {
+          switch (maze.getContent(i, j)) {
             case ACCESSABLE:
               pw.write(ROAD);
               break;
@@ -117,9 +69,9 @@ public abstract class AbstractMazeGenerator {
   }
 
   public void dump() throws IOException {
-    for (int i = 0; i < rows; i++) {
-      for (int j = 0; j < columns; j++) {
-        switch (store[i][j]) {
+    for (int i = 0; i < maze.getRows(); i++) {
+      for (int j = 0; j < maze.getColumns(); j++) {
+        switch (maze.getContent(i, j)) {
           case ACCESSABLE:
             System.out.print(ROAD);
             break;
@@ -132,17 +84,9 @@ public abstract class AbstractMazeGenerator {
     }
   }
 
-  protected int closedRandom(int fromClosed, int toClosed) {
-    if (fromClosed > toClosed) {
-      return fromClosed;
-    }
-    return R.nextInt(toClosed + 1 - fromClosed) + fromClosed;
-  }
-
-  public BufferedImage makeImage() {
-    int width = columns * brushSize;
-    int height = rows * brushSize;
-    int border = 5;
+  public BufferedImage makeImage(Maze maze) {
+    int r = maze.getRows(), c = maze.getColumns();
+    int width = maze.getColumns() * brushSize, height = maze.getRows() * brushSize, border = 5;
 
     // 创建BufferedImage对象
     BufferedImage image = new BufferedImage(width + border * 2, height + border * 2,
@@ -156,9 +100,9 @@ public abstract class AbstractMazeGenerator {
       g2d.clearRect(0, 0, width + border * 2, height + border * 2);
 
       final int b = brushSize;
-      for (int i = 0; i < store.length; i++) {
-        for (int j = 0; j < store[i].length; j++) {
-          if (isBlocked(store[i][j])) {
+      for (int i = 0; i < r; i++) {
+        for (int j = 0; j < c; j++) {
+          if (maze.isBlocked(maze.getContent(i, j))) {
             g2d.setPaint(C_BLOCKED);
             g2d.fillRect(border + j * b, border + i * b, b, b);
           } else {
@@ -167,7 +111,7 @@ public abstract class AbstractMazeGenerator {
           }
         }
         g2d.setPaint(C_ACCESSIBLE);
-        g2d.fillRect(border + store[i].length * b, border + i * b, b, b);
+        g2d.fillRect(border + c * b, border + i * b, b, b);
       }
       g2d.setPaint(C_ACCESSIBLE);
       g2d.fillRect(height + border, 0, width, border);
@@ -180,8 +124,8 @@ public abstract class AbstractMazeGenerator {
     return image;
   }
 
-  public void writeMaze(String path) throws Exception {
-    ImageIO.write(makeImage(), "png", new File(path + ".png"));
+  public void writeMaze(Maze maze, String path) throws Exception {
+    ImageIO.write(makeImage(maze), "png", new File(path + ".png"));
   }
 
   public abstract void createMaze() throws Exception;

@@ -1,21 +1,15 @@
 package com.qyer.dora.maze.generator;
 
+import static com.qyer.dora.maze.Constants.ACCESSABLE;
 import static com.qyer.dora.maze.Constants.BLOCK;
-import static com.qyer.dora.maze.Constants.BRUSH_MIDDLE;
 import static com.qyer.dora.maze.Constants.R;
 
 import com.google.common.collect.Lists;
-import com.qyer.dora.maze.Constants;
-import com.qyer.dora.maze.Utils;
 import com.qyer.dora.shape.RCPoint;
 import com.qyer.dora.shape.RCSegment;
 import org.apache.commons.collections4.CollectionUtils;
 
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -25,19 +19,11 @@ import java.util.concurrent.LinkedBlockingQueue;
  */
 public class PrimMazeGenerator extends AbstractMazeGenerator {
 
-  private static final int D_LEFT = 0;
-  private static final int D_TOP = 1;
-  private static final int D_RIGHT = 2;
-  private static final int D_BOTTOM = 3;
+  private static final int STEP = 2;
 
-  public PrimMazeGenerator(int brushSize, int rowsColumns) {
-    this(brushSize, rowsColumns, rowsColumns);
-  }
-
-  public PrimMazeGenerator(int brushSize, int rows, int columns) {
-    super(brushSize, ((rows % 2) == 0) ? (rows + 1) : rows,
-          ((columns % 2) == 0) ? (columns + 1) : columns);
-    fill(BLOCK, 0, rows, 0, columns);
+  private PrimMazeGenerator(int brushSize, int rows, int columns) {
+    super(brushSize, rows, columns);
+    maze.fill(BLOCK, 0, rows, 0, columns);
   }
 
   public static final PrimMazeGenerator createGenerator(int brushSize, int rowsColumns) {
@@ -58,50 +44,38 @@ public class PrimMazeGenerator extends AbstractMazeGenerator {
   }
 
   public void createMaze() throws IOException {
-    int s = 2;
     final List<RCSegment> candidate = Lists.newLinkedList();
-    int row = closedRandom(s, rows - 1 - s), col = closedRandom(s, columns - 1 - s);
     RCPoint initPoint = new RCPoint(1, 1);
-
     candidate.add(new RCSegment(initPoint, initPoint));
     while (CollectionUtils.isNotEmpty(candidate)) {
       RCSegment rcSegment = candidate.remove(R.nextInt(candidate.size()));
       RCPoint frontier = rcSegment.getFrom(), wall = rcSegment.getTo();
-      if (isAccessible(getContent(frontier))) {
+      if (maze.isAccessible(frontier)) {
         continue;
       }
-      updateMazePoint(frontier, Constants.ACCESSABLE);
-      updateMazePoint(wall, Constants.ACCESSABLE);
-      row = frontier.getRow();
-      col = frontier.getColumn();
-      if (row >= firstRow() + s && isBlocked(getContent(row - s, col))) {
-        candidate.add(new RCSegment(new RCPoint(row - s, col), new RCPoint(row - s + 1, col)));
+      maze.updateVal(frontier, ACCESSABLE);
+      maze.updateVal(wall, ACCESSABLE);
+      int row = frontier.getRow(), col = frontier.getColumn();
+      if (row >= maze.firstRow() + STEP && maze.isBlocked(row - STEP, col)) {
+        candidate
+          .add(new RCSegment(new RCPoint(row - STEP, col), new RCPoint(row - STEP + 1, col)));
       }
-      if (col >= firstColumn() + s && isBlocked(getContent(row, col - s))) {
-        candidate.add(new RCSegment(new RCPoint(row, col - s), new RCPoint(row, col - s + 1)));
+      if (col >= maze.firstColumn() + STEP && maze.isBlocked(row, col - STEP)) {
+        candidate
+          .add(new RCSegment(new RCPoint(row, col - STEP), new RCPoint(row, col - STEP + 1)));
       }
-
-      if (row <= lastRow() - s && isBlocked(getContent(row + s, col))) {
-        candidate.add(new RCSegment(new RCPoint(row + s, col), new RCPoint(row + s - 1, col)));
+      if (row <= maze.lastRow() - STEP && maze.isBlocked(row + STEP, col)) {
+        candidate
+          .add(new RCSegment(new RCPoint(row + STEP, col), new RCPoint(row + STEP - 1, col)));
       }
-      if (col <= lastColumn() - s && isBlocked(getContent(row, col + s))) {
-        candidate.add(new RCSegment(new RCPoint(row, col + s), new RCPoint(row, col + s - 1)));
+      if (col <= maze.lastColumn() - STEP && maze.isBlocked(row, col + STEP)) {
+        candidate
+          .add(new RCSegment(new RCPoint(row, col + STEP), new RCPoint(row, col + STEP - 1)));
       }
     }
-    border(BLOCK);
-    setEntranceExit();
+    maze.border(BLOCK);
+    maze.defaultEntrance();
+    maze.defaultExit();
   }
 
-  private void updateMazePoint(RCPoint p, byte type) {
-    store[p.getRow()][p.getColumn()] = type;
-  }
-
-  public static void main(String[] args) throws IOException {
-    PrimMazeGenerator maze = PrimMazeGenerator.createGenerator(BRUSH_MIDDLE, 80);
-    maze.createMaze();
-    BufferedImage image = maze.makeImage();
-    try (OutputStream os = new FileOutputStream(new File("d:/maze.png"))) {
-      Utils.writeImage(image, "png", os);
-    }
-  }
 }

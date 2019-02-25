@@ -49,9 +49,9 @@ public class RecursiveDivisionMazeServlet extends HttpServlet {
     } else if (brush > BRUSH_THICK) {
       brush = BRUSH_THICK;
     }
-    RecursiveDivisionMazeGenerator maze = new RecursiveDivisionMazeGenerator(brush, height, width);
-    maze.createMaze();
-    BufferedImage image = maze.makeImage();
+    RecursiveDivisionMazeGenerator g = new RecursiveDivisionMazeGenerator(brush, height, width);
+    g.createMaze();
+    BufferedImage image = g.makeImage(g.getMaze());
     Utils.writeImage(image, "png", resp.getOutputStream());
   }
 

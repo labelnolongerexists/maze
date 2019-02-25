@@ -49,9 +49,9 @@ public class PrimMazeServlet extends HttpServlet {
     } else if (brush > BRUSH_THICK) {
       brush = BRUSH_THICK;
     }
-    PrimMazeGenerator maze = PrimMazeGenerator.createGenerator(brush, height, width);
-    maze.createMaze();
-    BufferedImage image = maze.makeImage();
+    PrimMazeGenerator g = PrimMazeGenerator.createGenerator(brush, height, width);
+    g.createMaze();
+    BufferedImage image = g.makeImage(g.getMaze());
     Utils.writeImage(image, "png", resp.getOutputStream());
   }
 
