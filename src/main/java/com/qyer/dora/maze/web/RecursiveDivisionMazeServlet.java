@@ -9,7 +9,7 @@ import static com.qyer.dora.maze.Constants.DEFAULT_MAZE_WIDTH;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.qyer.dora.maze.Utils;
-import com.qyer.dora.maze.generator.RecursiveDivisionMazeGenerator;
+import com.qyer.dora.maze.generator.RecursiveDivision4MazeGenerator;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.servlet.ServletException;
@@ -49,9 +49,9 @@ public class RecursiveDivisionMazeServlet extends HttpServlet {
     } else if (brush > BRUSH_THICK) {
       brush = BRUSH_THICK;
     }
-    RecursiveDivisionMazeGenerator g = new RecursiveDivisionMazeGenerator(brush, height, width);
+    RecursiveDivision4MazeGenerator g = new RecursiveDivision4MazeGenerator(brush, height, width);
     g.createMaze();
-    BufferedImage image = g.makeImage(g.getMaze());
+    BufferedImage image = Utils.makeImage(g.getMaze(), brush);
     Utils.writeImage(image, "png", resp.getOutputStream());
   }
 

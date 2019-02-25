@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * User: Z J Wu Date: 2019-02-20 Time: 18:26 Package: com.hhrb.maze
  */
-public class RecursiveDivisionMazeGenerator extends AbstractMazeGenerator {
+public class RecursiveDivision6MazeGenerator extends AbstractMazeGenerator {
 
   private final int MIN = 2;
 
@@ -23,11 +23,11 @@ public class RecursiveDivisionMazeGenerator extends AbstractMazeGenerator {
   private final int WALL_BOTTOM = 3;
   private List<Integer> WALLS = Lists.newArrayList(WALL_LEFT, WALL_TOP, WALL_RIGHT, WALL_BOTTOM);
 
-  public RecursiveDivisionMazeGenerator(int brushSize, int rowsColumns) {
+  public RecursiveDivision6MazeGenerator(int brushSize, int rowsColumns) {
     this(brushSize, rowsColumns, rowsColumns);
   }
 
-  public RecursiveDivisionMazeGenerator(int brushSize, int rows, int columns) {
+  public RecursiveDivision6MazeGenerator(int brushSize, int rows, int columns) {
     super(brushSize, rows, columns);
     maze.border(BLOCK);
     maze.fill(ACCESSIBLE, 1, rows - 1, 1, columns - 1);
@@ -73,12 +73,6 @@ public class RecursiveDivisionMazeGenerator extends AbstractMazeGenerator {
     return WALLS.subList(0, 3);
   }
 
-  public void createMaze() throws IOException {
-    createMaze(0, maze.getRows() - 1, 0, maze.getColumns() - 1);
-    maze.defaultEntrance();
-    maze.defaultExit();
-  }
-
   private void makeDoors(List<Integer> wallIds, int centerRow, int centerColumn, int cFrom, int cTo,
                          int rFrom, int rTo) {
     for (Integer wallId : wallIds) {
@@ -97,6 +91,12 @@ public class RecursiveDivisionMazeGenerator extends AbstractMazeGenerator {
           break;
       }
     }
+  }
+
+  public void createMaze() throws IOException {
+    createMaze(0, maze.getRows() - 1, 0, maze.getColumns() - 1);
+    maze.defaultEntrance();
+    maze.defaultExit();
   }
 
   public void createMaze(int rFrom, int rTo, int cFrom, int cTo) throws IOException {

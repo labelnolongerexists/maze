@@ -51,7 +51,7 @@ public class PrimMazeServlet extends HttpServlet {
     }
     PrimMazeGenerator g = PrimMazeGenerator.createGenerator(brush, height, width);
     g.createMaze();
-    BufferedImage image = g.makeImage(g.getMaze());
+    BufferedImage image = Utils.makeImage(g.getMaze(), brush);
     Utils.writeImage(image, "png", resp.getOutputStream());
   }
 
