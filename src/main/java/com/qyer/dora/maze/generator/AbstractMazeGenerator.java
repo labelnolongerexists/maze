@@ -1,9 +1,11 @@
 package com.qyer.dora.maze.generator;
 
-import static com.qyer.dora.maze.Constants.ACCESSABLE;
+import static com.qyer.dora.maze.Constants.ACCESSIBLE;
 import static com.qyer.dora.maze.Constants.BLOCK;
 import static com.qyer.dora.maze.Constants.C_ACCESSIBLE;
+import static com.qyer.dora.maze.Constants.C_BACKGROUND;
 import static com.qyer.dora.maze.Constants.C_BLOCKED;
+import static com.qyer.dora.maze.Constants.DEFAULT_BORDER;
 import static com.qyer.dora.maze.Constants.G_WALL;
 import static com.qyer.dora.maze.Constants.ROAD;
 
@@ -55,7 +57,7 @@ public abstract class AbstractMazeGenerator {
       for (int i = 0; i < maze.getRows(); i++) {
         for (int j = 0; j < maze.getColumns(); j++) {
           switch (maze.getContent(i, j)) {
-            case ACCESSABLE:
+            case ACCESSIBLE:
               pw.write(ROAD);
               break;
             default:
@@ -72,7 +74,7 @@ public abstract class AbstractMazeGenerator {
     for (int i = 0; i < maze.getRows(); i++) {
       for (int j = 0; j < maze.getColumns(); j++) {
         switch (maze.getContent(i, j)) {
-          case ACCESSABLE:
+          case ACCESSIBLE:
             System.out.print(ROAD);
             break;
           case BLOCK:
@@ -86,35 +88,35 @@ public abstract class AbstractMazeGenerator {
 
   public BufferedImage makeImage(Maze maze) {
     int r = maze.getRows(), c = maze.getColumns();
-    int width = maze.getColumns() * brushSize, height = maze.getRows() * brushSize, border = 5;
+    int width = maze.getColumns() * brushSize, height = maze.getRows() * brushSize;
 
+    final int b = brushSize, bd = DEFAULT_BORDER;
     // 创建BufferedImage对象
-    BufferedImage image = new BufferedImage(width + border * 2, height + border * 2,
+    BufferedImage image = new BufferedImage(width + bd * 2, height + bd * 2,
                                             BufferedImage.TYPE_INT_RGB);
     // 获取Graphics2D
     Graphics2D g2d = null;
     try {
       g2d = image.createGraphics();
       // 画图
-      g2d.setBackground(C_ACCESSIBLE);
-      g2d.clearRect(0, 0, width + border * 2, height + border * 2);
+      g2d.setBackground(C_BACKGROUND);
+      g2d.clearRect(0, 0, width + bd * 2, height + bd * 2);
 
-      final int b = brushSize;
       for (int i = 0; i < r; i++) {
         for (int j = 0; j < c; j++) {
           if (maze.isBlocked(maze.getContent(i, j))) {
             g2d.setPaint(C_BLOCKED);
-            g2d.fillRect(border + j * b, border + i * b, b, b);
+            g2d.fillRect(bd + j * b, bd + i * b, b, b);
           } else {
             g2d.setPaint(C_ACCESSIBLE);
-            g2d.fillRect(border + j * b, border + i * b, b, b);
+            g2d.fillRect(bd + j * b, bd + i * b, b, b);
           }
         }
         g2d.setPaint(C_ACCESSIBLE);
-        g2d.fillRect(border + c * b, border + i * b, b, b);
+        g2d.fillRect(bd + c * b, bd + i * b, b, b);
       }
       g2d.setPaint(C_ACCESSIBLE);
-      g2d.fillRect(height + border, 0, width, border);
+      g2d.fillRect(height + bd, 0, width, bd);
     } finally {
       //释放对象
       if (g2d != null) {

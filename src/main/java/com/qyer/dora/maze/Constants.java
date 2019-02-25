@@ -13,7 +13,7 @@ public class Constants {
 
   public static final Random R = new Random();
 
-  public static final byte ACCESSABLE = 0;
+  public static final byte ACCESSIBLE = 0;
   public static final byte BLOCK = 1;
 
   public static final char ROAD = ' ';
@@ -28,7 +28,9 @@ public class Constants {
   private static final int C1 = 0x1e;
   private static final int C2 = 0xda;
 
-  public static final Color C_BACKGROUND = new Color(255, 255, 255);
-  public static final Color C_BLOCKED = new Color(11, 52, 110);
+  public static final Color C_BLOCKED = new Color(67, 67, 67);
   public static final Color C_ACCESSIBLE = new Color(189, 192, 186);
+  public static final Color C_BACKGROUND = C_ACCESSIBLE;
+
+  public static final int DEFAULT_BORDER = 10;
 }

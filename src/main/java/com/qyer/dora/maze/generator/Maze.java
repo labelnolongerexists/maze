@@ -1,6 +1,6 @@
 package com.qyer.dora.maze.generator;
 
-import static com.qyer.dora.maze.Constants.ACCESSABLE;
+import static com.qyer.dora.maze.Constants.ACCESSIBLE;
 
 import com.qyer.dora.shape.RCPoint;
 
@@ -83,7 +83,7 @@ public class Maze {
   }
 
   public boolean isBlocked(byte b) {
-    return b != ACCESSABLE;
+    return b != ACCESSIBLE;
   }
 
   public boolean isAccessible(RCPoint point) {
@@ -95,7 +95,7 @@ public class Maze {
   }
 
   public boolean isAccessible(byte b) {
-    return b == ACCESSABLE;
+    return b == ACCESSIBLE;
   }
 
   public byte getContent(RCPoint point) {
@@ -107,19 +107,19 @@ public class Maze {
   }
 
   public void defaultEntrance() {
-    store[DEFAULT_ENTRANCE.getRow()][DEFAULT_ENTRANCE.getColumn()] = ACCESSABLE;
+    store[DEFAULT_ENTRANCE.getRow()][DEFAULT_ENTRANCE.getColumn()] = ACCESSIBLE;
   }
 
   public void defaultExit() {
-    store[rows - 2][columns - 1] = ACCESSABLE;
+    store[rows - 2][columns - 1] = ACCESSIBLE;
   }
 
   public void setEntrance(RCPoint entrance) {
-    store[entrance.getRow()][entrance.getColumn()] = ACCESSABLE;
+    store[entrance.getRow()][entrance.getColumn()] = ACCESSIBLE;
   }
 
   public void setExit(RCPoint exit) {
-    store[exit.getRow()][exit.getColumn()] = ACCESSABLE;
+    store[exit.getRow()][exit.getColumn()] = ACCESSIBLE;
   }
 
   public void updateVal(RCPoint p, byte v) {

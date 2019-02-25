@@ -1,6 +1,6 @@
 package com.qyer.dora.maze.generator;
 
-import static com.qyer.dora.maze.Constants.ACCESSABLE;
+import static com.qyer.dora.maze.Constants.ACCESSIBLE;
 import static com.qyer.dora.maze.Constants.BLOCK;
 import static com.qyer.dora.maze.Constants.R;
 
@@ -53,8 +53,8 @@ public class PrimMazeGenerator extends AbstractMazeGenerator {
       if (maze.isAccessible(frontier)) {
         continue;
       }
-      maze.updateVal(frontier, ACCESSABLE);
-      maze.updateVal(wall, ACCESSABLE);
+      maze.updateVal(frontier, ACCESSIBLE);
+      maze.updateVal(wall, ACCESSIBLE);
       int row = frontier.getRow(), col = frontier.getColumn();
       if (row >= maze.firstRow() + STEP && maze.isBlocked(row - STEP, col)) {
         candidate

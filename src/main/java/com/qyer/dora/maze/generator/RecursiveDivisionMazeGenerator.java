@@ -1,6 +1,6 @@
 package com.qyer.dora.maze.generator;
 
-import static com.qyer.dora.maze.Constants.ACCESSABLE;
+import static com.qyer.dora.maze.Constants.ACCESSIBLE;
 import static com.qyer.dora.maze.Constants.BLOCK;
 import static com.qyer.dora.maze.Utils.closedRandom;
 
@@ -30,7 +30,7 @@ public class RecursiveDivisionMazeGenerator extends AbstractMazeGenerator {
   public RecursiveDivisionMazeGenerator(int brushSize, int rows, int columns) {
     super(brushSize, rows, columns);
     maze.border(BLOCK);
-    maze.fill(ACCESSABLE, 1, rows - 1, 1, columns - 1);
+    maze.fill(ACCESSIBLE, 1, rows - 1, 1, columns - 1);
   }
 
   private void fillColumn(int rowFrom, int rowTo, int column, byte entity) {
@@ -61,7 +61,7 @@ public class RecursiveDivisionMazeGenerator extends AbstractMazeGenerator {
   }
 
   private void setDoor(int r, int c) {
-    maze.updateVal(r, c, ACCESSABLE);
+    maze.updateVal(r, c, ACCESSIBLE);
   }
 
   private boolean canSplit(int a, int b) {
