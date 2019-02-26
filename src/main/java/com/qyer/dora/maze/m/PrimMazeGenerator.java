@@ -1,4 +1,4 @@
-package com.qyer.dora.maze.generator;
+package com.qyer.dora.maze.m;
 
 import static com.qyer.dora.maze.Constants.ACCESSIBLE;
 import static com.qyer.dora.maze.Constants.BLOCK;
@@ -23,7 +23,7 @@ public class PrimMazeGenerator extends AbstractMazeGenerator {
 
   private PrimMazeGenerator(int brushSize, int rows, int columns) {
     super(brushSize, rows, columns);
-    maze.fill(BLOCK, 0, rows, 0, columns);
+    tileBasedMap.fill(BLOCK, 0, rows, 0, columns);
   }
 
   public static final PrimMazeGenerator createGenerator(int brushSize, int rowsColumns) {
@@ -50,32 +50,32 @@ public class PrimMazeGenerator extends AbstractMazeGenerator {
     while (CollectionUtils.isNotEmpty(candidate)) {
       RCSegment rcSegment = candidate.remove(R.nextInt(candidate.size()));
       RCPoint frontier = rcSegment.getFrom(), wall = rcSegment.getTo();
-      if (maze.isAccessible(frontier)) {
+      if (tileBasedMap.isAccessible(frontier)) {
         continue;
       }
-      maze.updateVal(frontier, ACCESSIBLE);
-      maze.updateVal(wall, ACCESSIBLE);
+      tileBasedMap.updateVal(frontier, ACCESSIBLE);
+      tileBasedMap.updateVal(wall, ACCESSIBLE);
       int row = frontier.getRow(), col = frontier.getColumn();
-      if (row >= maze.firstRow() + STEP && maze.isBlocked(row - STEP, col)) {
+      if (row >= tileBasedMap.firstRow() + STEP && tileBasedMap.isBlocked(row - STEP, col)) {
         candidate
           .add(new RCSegment(new RCPoint(row - STEP, col), new RCPoint(row - STEP + 1, col)));
       }
-      if (col >= maze.firstColumn() + STEP && maze.isBlocked(row, col - STEP)) {
+      if (col >= tileBasedMap.firstColumn() + STEP && tileBasedMap.isBlocked(row, col - STEP)) {
         candidate
           .add(new RCSegment(new RCPoint(row, col - STEP), new RCPoint(row, col - STEP + 1)));
       }
-      if (row <= maze.lastRow() - STEP && maze.isBlocked(row + STEP, col)) {
+      if (row <= tileBasedMap.lastRow() - STEP && tileBasedMap.isBlocked(row + STEP, col)) {
         candidate
           .add(new RCSegment(new RCPoint(row + STEP, col), new RCPoint(row + STEP - 1, col)));
       }
-      if (col <= maze.lastColumn() - STEP && maze.isBlocked(row, col + STEP)) {
+      if (col <= tileBasedMap.lastColumn() - STEP && tileBasedMap.isBlocked(row, col + STEP)) {
         candidate
           .add(new RCSegment(new RCPoint(row, col + STEP), new RCPoint(row, col + STEP - 1)));
       }
     }
-    maze.border(BLOCK);
-    maze.defaultEntrance();
-    maze.defaultExit();
+    tileBasedMap.border(BLOCK);
+    tileBasedMap.defaultEntrance();
+    tileBasedMap.defaultExit();
   }
 
 }

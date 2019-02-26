@@ -2,8 +2,8 @@ package com.qyer.dora.maze.web;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.qyer.dora.maze.generator.Maze;
-import com.qyer.dora.maze.generator.PrimMazeGenerator;
+import com.qyer.dora.maze.TileBasedMap;
+import com.qyer.dora.maze.m.PrimMazeGenerator;
 
 import java.io.IOException;
 
@@ -18,10 +18,10 @@ public class PrimMazeServlet extends TileBasedMazeServlet {
   }
 
   @Override
-  protected Maze generateMaze(int width, int height, int b) throws IOException {
+  protected TileBasedMap generateMaze(int width, int height, int b) throws IOException {
     PrimMazeGenerator g = PrimMazeGenerator.createGenerator(b, height, width);
     g.createMaze();
-    return g.getMaze();
+    return g.getTileBasedMap();
   }
 
 }

@@ -1,12 +1,19 @@
 package com.qyer.dora.maze;
 
+import static com.qyer.dora.maze.Constants.ACCESSIBLE;
+import static com.qyer.dora.maze.Constants.BLOCK;
 import static com.qyer.dora.maze.Constants.C_ACCESSIBLE;
 import static com.qyer.dora.maze.Constants.C_BACKGROUND;
 import static com.qyer.dora.maze.Constants.C_BLOCKED;
 import static com.qyer.dora.maze.Constants.DEFAULT_BORDER;
+import static com.qyer.dora.maze.Constants.G_WALL;
+import static com.qyer.dora.maze.Constants.H_BLOCK;
+import static com.qyer.dora.maze.Constants.H_WALL;
 import static com.qyer.dora.maze.Constants.R;
+import static com.qyer.dora.maze.Constants.ROAD;
+import static com.qyer.dora.maze.Constants.V_BLOCK;
+import static com.qyer.dora.maze.Constants.V_WALL;
 
-import com.qyer.dora.maze.generator.Maze;
 import org.apache.commons.collections4.CollectionUtils;
 
 import javax.imageio.ImageIO;
@@ -44,9 +51,9 @@ public class Utils {
     return list.get(idx);
   }
 
-  public static BufferedImage makeImage(Maze maze, int brushSize) {
-    int r = maze.getRows(), c = maze.getColumns();
-    int width = maze.getColumns() * brushSize, height = maze.getRows() * brushSize;
+  public static BufferedImage makeImage(TileBasedMap tileBasedMap, int brushSize) {
+    int r = tileBasedMap.getRows(), c = tileBasedMap.getColumns();
+    int width = tileBasedMap.getColumns() * brushSize, height = tileBasedMap.getRows() * brushSize;
 
     final int b = brushSize, bd = DEFAULT_BORDER;
     // 创建BufferedImage对象
@@ -62,7 +69,7 @@ public class Utils {
 
       for (int i = 0; i < r; i++) {
         for (int j = 0; j < c; j++) {
-          if (maze.isBlocked(maze.getContent(i, j))) {
+          if (tileBasedMap.isBlocked(tileBasedMap.getContent(i, j))) {
             g2d.setPaint(C_BLOCKED);
             g2d.fillRect(bd + j * b, bd + i * b, b, b);
           } else {
@@ -84,8 +91,9 @@ public class Utils {
     return image;
   }
 
-  public static void writeMaze(Maze maze, String path, int brushSize) throws Exception {
-    ImageIO.write(makeImage(maze, brushSize), "png", new File(path + ".png"));
+  public static void writeMaze(TileBasedMap tileBasedMap, String path, int brushSize) throws
+    Exception {
+    ImageIO.write(makeImage(tileBasedMap, brushSize), "png", new File(path + ".png"));
   }
 
   public static final void printFileContentInClassPath(String filePath) {
@@ -108,6 +116,28 @@ public class Utils {
       return true;
     }
     return R.nextInt(100) < percentOfTrue;
+  }
+
+  public static final void dump(TileBasedMap map) {
+    for (int i = 0; i < map.getRows(); i++) {
+      for (int j = 0; j < map.getColumns(); j++) {
+        switch (map.getContent(i, j)) {
+          case ACCESSIBLE:
+            System.out.print(ROAD);
+            break;
+          case BLOCK:
+            System.out.print(G_WALL);
+            break;
+          case H_BLOCK:
+            System.out.print(H_WALL);
+            break;
+          case V_BLOCK:
+            System.out.print(V_WALL);
+            break;
+        }
+      }
+      System.out.println();
+    }
   }
 
   public static void main(String[] args) {

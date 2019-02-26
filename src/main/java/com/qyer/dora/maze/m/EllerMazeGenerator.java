@@ -1,4 +1,4 @@
-package com.qyer.dora.maze.generator;
+package com.qyer.dora.maze.m;
 
 import static com.qyer.dora.maze.Constants.ACCESSIBLE;
 import static com.qyer.dora.maze.Constants.BLOCK;
@@ -39,14 +39,14 @@ public class EllerMazeGenerator extends AbstractMazeGenerator {
 
   @Override
   public void createMaze() throws Exception {
-    maze.border(BLOCK);
+    tileBasedMap.border(BLOCK);
     int s = 2;
-    for (int r = 1; r < maze.getRows() - 1; r++) {
+    for (int r = 1; r < tileBasedMap.getRows() - 1; r++) {
       // odd: create random area
       if ((r & 1) == 1) {
-        for (int c = maze.firstColumn() + 1; c < maze.lastColumn(); c += Utils
+        for (int c = tileBasedMap.firstColumn() + 1; c < tileBasedMap.lastColumn(); c += Utils
           .closedRandom(2, randomJoint) * s) {
-          maze.updateVal(r, c - 1, BLOCK);
+          tileBasedMap.updateVal(r, c - 1, BLOCK);
         }
       }
       // even: fill with h-walls
@@ -54,9 +54,9 @@ public class EllerMazeGenerator extends AbstractMazeGenerator {
         System.out.println("---------------------------------");
         // LastRowWall
         int lastWallCol, newWallCol = 0;
-        for (int c = maze.firstColumn() + 1; c <= maze.lastColumn(); c++) {
-          if (maze.isBlocked(r - 1, c)) {
-            maze.updateVal(r, c, H_BLOCK);
+        for (int c = tileBasedMap.firstColumn() + 1; c <= tileBasedMap.lastColumn(); c++) {
+          if (tileBasedMap.isBlocked(r - 1, c)) {
+            tileBasedMap.updateVal(r, c, H_BLOCK);
 
             lastWallCol = newWallCol;
             newWallCol = c;
@@ -78,25 +78,21 @@ public class EllerMazeGenerator extends AbstractMazeGenerator {
             for (Integer p : sub) {
               t = p;
               System.out.println(f + "/" + t);
-              maze.updateRowSegment(r, f, t, H_BLOCK);
+              tileBasedMap.updateRowSegment(r, f, t, H_BLOCK);
               f = t + 1;
             }
-            maze.updateRowSegment(r, f, c, H_BLOCK);
+            tileBasedMap.updateRowSegment(r, f, c, H_BLOCK);
 //            System.out.println(
 //              lastWallCol + " - " + newWallCol + " - " + candidates + " - selected: " + sub);
           }
         }
       }
-      maze.updateRowSegment(maze.lastRow() - 1, maze.firstColumn() + 1, maze.lastColumn(),
-                            ACCESSIBLE);
+      tileBasedMap.updateRowSegment(tileBasedMap.lastRow() - 1, tileBasedMap.firstColumn() + 1, tileBasedMap
+                                      .lastColumn(),
+                                    ACCESSIBLE);
     }
-    maze.defaultEntrance();
-    maze.defaultExit();
+    tileBasedMap.defaultEntrance();
+    tileBasedMap.defaultExit();
   }
 
-  public static void main(String[] args) throws Exception {
-    EllerMazeGenerator emg = new EllerMazeGenerator(1, 5, 41);
-    emg.createMaze();
-    emg.dump();
-  }
 }

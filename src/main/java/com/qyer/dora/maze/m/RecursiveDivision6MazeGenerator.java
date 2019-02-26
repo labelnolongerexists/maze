@@ -1,4 +1,4 @@
-package com.qyer.dora.maze.generator;
+package com.qyer.dora.maze.m;
 
 import static com.qyer.dora.maze.Constants.ACCESSIBLE;
 import static com.qyer.dora.maze.Constants.BLOCK;
@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * User: Z J Wu Date: 2019-02-20 Time: 18:26 Package: com.hhrb.maze
  */
-public class RecursiveDivision4MazeGenerator extends AbstractMazeGenerator {
+public class RecursiveDivision6MazeGenerator extends AbstractMazeGenerator {
 
   private final int MIN = 2;
 
@@ -23,45 +23,45 @@ public class RecursiveDivision4MazeGenerator extends AbstractMazeGenerator {
   private final int WALL_BOTTOM = 3;
   private List<Integer> WALLS = Lists.newArrayList(WALL_LEFT, WALL_TOP, WALL_RIGHT, WALL_BOTTOM);
 
-  public RecursiveDivision4MazeGenerator(int brushSize, int rowsColumns) {
+  public RecursiveDivision6MazeGenerator(int brushSize, int rowsColumns) {
     this(brushSize, rowsColumns, rowsColumns);
   }
 
-  public RecursiveDivision4MazeGenerator(int brushSize, int rows, int columns) {
+  public RecursiveDivision6MazeGenerator(int brushSize, int rows, int columns) {
     super(brushSize, rows, columns);
-    maze.border(BLOCK);
-    maze.fill(ACCESSIBLE, 1, rows - 1, 1, columns - 1);
+    tileBasedMap.border(BLOCK);
+    tileBasedMap.fill(ACCESSIBLE, 1, rows - 1, 1, columns - 1);
   }
 
   private void fillColumn(int rowFrom, int rowTo, int column, byte entity) {
-    int start = maze.isAccessible(rowFrom - 1, column) ? rowFrom + 1 : rowFrom;
-    int to = maze.isAccessible(rowTo + 1, column) ? rowTo - 1 : rowTo;
+    int start = tileBasedMap.isAccessible(rowFrom - 1, column) ? rowFrom + 1 : rowFrom;
+    int to = tileBasedMap.isAccessible(rowTo + 1, column) ? rowTo - 1 : rowTo;
     for (int i = start; i <= to; i++) {
-      for (int j = 0; j < maze.getColumns(); j++) {
-        maze.updateVal(i, column, entity);
+      for (int j = 0; j < tileBasedMap.getColumns(); j++) {
+        tileBasedMap.updateVal(i, column, entity);
       }
     }
   }
 
   private void fillRow(int columnFrom, int columnTo, int row, byte entity) {
     int start, to;
-    if (maze.isAccessible(row, columnFrom - 1)) {
+    if (tileBasedMap.isAccessible(row, columnFrom - 1)) {
       start = columnFrom + 1;
     } else {
       start = columnFrom;
     }
-    if (maze.isAccessible(row, columnTo + 1)) {
+    if (tileBasedMap.isAccessible(row, columnTo + 1)) {
       to = columnTo - 1;
     } else {
       to = columnTo;
     }
     for (int i = start; i <= to; i++) {
-      maze.updateVal(row, i, entity);
+      tileBasedMap.updateVal(row, i, entity);
     }
   }
 
   private void setDoor(int r, int c) {
-    maze.updateVal(r, c, ACCESSIBLE);
+    tileBasedMap.updateVal(r, c, ACCESSIBLE);
   }
 
   private boolean canSplit(int a, int b) {
@@ -94,9 +94,9 @@ public class RecursiveDivision4MazeGenerator extends AbstractMazeGenerator {
   }
 
   public void createMaze() throws IOException {
-    createMaze(0, maze.getRows() - 1, 0, maze.getColumns() - 1);
-    maze.defaultEntrance();
-    maze.defaultExit();
+    createMaze(0, tileBasedMap.getRows() - 1, 0, tileBasedMap.getColumns() - 1);
+    tileBasedMap.defaultEntrance();
+    tileBasedMap.defaultExit();
   }
 
   public void createMaze(int rFrom, int rTo, int cFrom, int cTo) throws IOException {

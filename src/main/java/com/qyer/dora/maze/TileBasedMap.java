@@ -1,4 +1,4 @@
-package com.qyer.dora.maze.generator;
+package com.qyer.dora.maze;
 
 import static com.qyer.dora.maze.Constants.ACCESSIBLE;
 
@@ -7,7 +7,7 @@ import com.qyer.dora.shape.RCPoint;
 /**
  * User: Z J Wu Date: 2019-02-25 Time: 10:23 Package: com.qyer.dora.maze.generator
  */
-public class Maze {
+public class TileBasedMap {
 
   public static final RCPoint DEFAULT_ENTRANCE = new RCPoint(1, 0);
 
@@ -16,13 +16,13 @@ public class Maze {
 
   private final byte[][] store;
 
-  public Maze(int rows, int columns) {
+  public TileBasedMap(int rows, int columns) {
     this.rows = rows;
     this.columns = columns;
     this.store = new byte[rows][columns];
   }
 
-  public Maze(int rowsColumns) {
+  public TileBasedMap(int rowsColumns) {
     this(rowsColumns, rowsColumns);
   }
 
@@ -58,19 +58,19 @@ public class Maze {
     return store;
   }
 
-  protected int firstRow() {
+  public int firstRow() {
     return 0;
   }
 
-  protected int firstColumn() {
+  public int firstColumn() {
     return 0;
   }
 
-  protected int lastRow() {
+  public int lastRow() {
     return rows - 1;
   }
 
-  protected int lastColumn() {
+  public int lastColumn() {
     return columns - 1;
   }
 
@@ -135,4 +135,77 @@ public class Maze {
       updateVal(r, i, v);
     }
   }
+
+  public byte top(int r, int c) {
+    return getContent(r - 1, c);
+  }
+
+  public byte topRight(int r, int c) {
+    return getContent(r - 1, c + 1);
+  }
+
+  public byte right(int r, int c) {
+    return getContent(r, c + 1);
+  }
+
+  public byte bottomRight(int r, int c) {
+    return getContent(r + 1, c + 1);
+  }
+
+  public byte bottom(int r, int c) {
+    return getContent(r + 1, c);
+  }
+
+  public byte bottomLeft(int r, int c) {
+    return getContent(r + 1, c - 1);
+  }
+
+  public byte left(int r, int c) {
+    return getContent(r, c - 1);
+  }
+
+  public byte topLeft(int r, int c) {
+    return getContent(r - 1, c - 1);
+  }
+
+  public byte[] surroundedClockwise(int r, int c) {
+    return new byte[]{
+      top(r, c), topRight(r, c), right(r, c), bottomRight(r, c), bottom(r, c), bottomLeft(r, c),
+      left(r, c), topLeft(r, c)
+    };
+  }
+
+  public int surroundedAccessibleCnt(int r, int c) {
+    return 8 - surroundedBlockCnt(r, c);
+  }
+
+  public int surroundedBlockCnt(int r, int c) {
+    int cnt = 0;
+    if (isBlocked(top(r, c))) {
+      ++cnt;
+    }
+    if (isBlocked(topRight(r, c))) {
+      ++cnt;
+    }
+    if (isBlocked(right(r, c))) {
+      ++cnt;
+    }
+    if (isBlocked(bottomRight(r, c))) {
+      ++cnt;
+    }
+    if (isBlocked(bottom(r, c))) {
+      ++cnt;
+    }
+    if (isBlocked(bottomLeft(r, c))) {
+      ++cnt;
+    }
+    if (isBlocked(left(r, c))) {
+      ++cnt;
+    }
+    if (isBlocked(topLeft(r, c))) {
+      ++cnt;
+    }
+    return cnt;
+  }
+
 }
