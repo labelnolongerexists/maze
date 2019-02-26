@@ -3,7 +3,11 @@ package com.qyer.dora.maze.generator;
 import static com.qyer.dora.maze.Constants.ACCESSIBLE;
 import static com.qyer.dora.maze.Constants.BLOCK;
 import static com.qyer.dora.maze.Constants.G_WALL;
+import static com.qyer.dora.maze.Constants.H_BLOCK;
+import static com.qyer.dora.maze.Constants.H_WALL;
 import static com.qyer.dora.maze.Constants.ROAD;
+import static com.qyer.dora.maze.Constants.V_BLOCK;
+import static com.qyer.dora.maze.Constants.V_WALL;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -72,6 +76,12 @@ public abstract class AbstractMazeGenerator {
             break;
           case BLOCK:
             System.out.print(G_WALL);
+            break;
+          case H_BLOCK:
+            System.out.print(H_WALL);
+            break;
+          case V_BLOCK:
+            System.out.print(V_WALL);
             break;
         }
       }

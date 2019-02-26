@@ -1,6 +1,7 @@
 package com.qyer.dora.maze.di;
 
 import com.google.inject.servlet.ServletModule;
+import com.qyer.dora.maze.web.EllerMazeServlet;
 import com.qyer.dora.maze.web.PrimMazeServlet;
 import com.qyer.dora.maze.web.RecursiveDivisionMazeServlet;
 
@@ -13,5 +14,6 @@ public class ServletMappingModule extends ServletModule {
   protected void configureServlets() {
     serve("/maze/rd").with(RecursiveDivisionMazeServlet.class);
     serve("/maze/prim").with(PrimMazeServlet.class);
+    serve("/maze/eller").with(EllerMazeServlet.class);
   }
 }

@@ -7,6 +7,7 @@ import static com.qyer.dora.maze.Constants.DEFAULT_BORDER;
 import static com.qyer.dora.maze.Constants.R;
 
 import com.qyer.dora.maze.generator.Maze;
+import org.apache.commons.collections4.CollectionUtils;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -16,6 +17,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.util.List;
 
 /**
  * User: Z J Wu Date: 2019-02-22 Time: 10:58 Package: com.qyer.dora.maze
@@ -32,6 +34,14 @@ public class Utils {
   public static final void writeImage(BufferedImage image, String format,
                                       OutputStream outputStream) throws IOException {
     ImageIO.write(image, format, outputStream);
+  }
+
+  public static final <T> T selectOne(List<T> list) {
+    if (CollectionUtils.isEmpty(list)) {
+      return null;
+    }
+    int idx = R.nextInt(list.size());
+    return list.get(idx);
   }
 
   public static BufferedImage makeImage(Maze maze, int brushSize) {

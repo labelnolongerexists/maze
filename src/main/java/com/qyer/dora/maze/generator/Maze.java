@@ -129,4 +129,10 @@ public class Maze {
   public void updateVal(int r, int c, byte v) {
     store[r][c] = v;
   }
+
+  public void updateRowSegment(int r, int cFrom, int cTo, byte v) {
+    for (int i = cFrom; i < cTo; i++) {
+      updateVal(r, i, v);
+    }
+  }
 }
