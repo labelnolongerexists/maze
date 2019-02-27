@@ -21,6 +21,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -66,7 +67,6 @@ public class Utils {
       // 画图
       g2d.setBackground(C_BACKGROUND);
       g2d.clearRect(0, 0, width + bd * 2, height + bd * 2);
-
       for (int i = 0; i < r; i++) {
         for (int j = 0; j < c; j++) {
           if (tileBasedMap.isBlocked(tileBasedMap.getContent(i, j))) {
@@ -140,7 +140,28 @@ public class Utils {
     }
   }
 
-  public static void main(String[] args) {
-    System.out.println(1);
+  public static void main(String[] args) throws IOException {
+    int a = 100, aa = 110;
+    BufferedImage image = new BufferedImage(aa, aa, BufferedImage.TYPE_INT_RGB);
+    // 获取Graphics2D
+    String f = "/Users/WuZijing/tmp_data/maze/oval.png";
+    Graphics2D g2d = null;
+    try (OutputStream os = new FileOutputStream(new File(f))) {
+      g2d = image.createGraphics();
+      // 画图
+      g2d.setBackground(C_BACKGROUND);
+      g2d.clearRect(0, 0, aa, aa);
+      g2d.setPaint(C_BLOCKED);
+      g2d.fillOval(5, 5, a, a);
+      g2d.setPaint(C_BACKGROUND);
+      g2d.fillOval(10, 10, 90, 90);
+      Utils.writeImage(image, "png", os);
+    } finally {
+      //释放对象
+      if (g2d != null) {
+        g2d.dispose();
+      }
+    }
   }
+
 }
