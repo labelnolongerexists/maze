@@ -5,6 +5,8 @@ import com.google.inject.Singleton;
 import com.qyer.dora.maze.TileBasedMap;
 import com.qyer.dora.maze.m.PrimMazeGenerator;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
@@ -18,8 +20,9 @@ public class PrimMazeServlet extends TileBasedMazeServlet {
   }
 
   @Override
-  protected TileBasedMap generateMaze(int width, int height, int b) throws IOException {
-    PrimMazeGenerator g = PrimMazeGenerator.createGenerator(b, height, width);
+  protected TileBasedMap generateMaze(HttpServletRequest req, HttpServletResponse resp, int width,
+                                      int height) throws IOException {
+    PrimMazeGenerator g = PrimMazeGenerator.createGenerator(height, width);
     g.createMaze();
     return g.getTileBasedMap();
   }

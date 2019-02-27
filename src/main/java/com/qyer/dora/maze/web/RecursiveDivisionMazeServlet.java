@@ -5,6 +5,8 @@ import com.google.inject.Singleton;
 import com.qyer.dora.maze.TileBasedMap;
 import com.qyer.dora.maze.m.RecursiveDivision4MazeGenerator;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
@@ -18,8 +20,9 @@ public class RecursiveDivisionMazeServlet extends TileBasedMazeServlet {
   }
 
   @Override
-  protected TileBasedMap generateMaze(int width, int height, int b) throws IOException {
-    RecursiveDivision4MazeGenerator g = new RecursiveDivision4MazeGenerator(b, height, width);
+  protected TileBasedMap generateMaze(HttpServletRequest req, HttpServletResponse resp, int width,
+                                      int height) throws IOException {
+    RecursiveDivision4MazeGenerator g = new RecursiveDivision4MazeGenerator(height, width);
     g.createMaze();
     return g.getTileBasedMap();
   }

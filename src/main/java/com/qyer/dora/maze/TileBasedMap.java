@@ -136,43 +136,47 @@ public class TileBasedMap {
     }
   }
 
-  public byte top(int r, int c) {
-    return getContent(r - 1, c);
+  public RCPoint top(int r, int c) {
+    return new RCPoint(r - 1, c);
   }
 
-  public byte topRight(int r, int c) {
-    return getContent(r - 1, c + 1);
+  public RCPoint topRight(int r, int c) {
+    return new RCPoint(r - 1, c + 1);
   }
 
-  public byte right(int r, int c) {
-    return getContent(r, c + 1);
+  public RCPoint right(int r, int c) {
+    return new RCPoint(r, c + 1);
   }
 
-  public byte bottomRight(int r, int c) {
-    return getContent(r + 1, c + 1);
+  public RCPoint bottomRight(int r, int c) {
+    return new RCPoint(r + 1, c + 1);
   }
 
-  public byte bottom(int r, int c) {
-    return getContent(r + 1, c);
+  public RCPoint bottom(int r, int c) {
+    return new RCPoint(r + 1, c);
   }
 
-  public byte bottomLeft(int r, int c) {
-    return getContent(r + 1, c - 1);
+  public RCPoint bottomLeft(int r, int c) {
+    return new RCPoint(r + 1, c - 1);
   }
 
-  public byte left(int r, int c) {
-    return getContent(r, c - 1);
+  public RCPoint left(int r, int c) {
+    return new RCPoint(r, c - 1);
   }
 
-  public byte topLeft(int r, int c) {
-    return getContent(r - 1, c - 1);
+  public RCPoint topLeft(int r, int c) {
+    return new RCPoint(r - 1, c - 1);
   }
 
-  public byte[] surroundedClockwise(int r, int c) {
-    return new byte[]{
-      top(r, c), topRight(r, c), right(r, c), bottomRight(r, c), bottom(r, c), bottomLeft(r, c),
-      left(r, c), topLeft(r, c)
-    };
+  public void updateSurrounded(int r, int c, byte b) {
+    updateVal(top(r, c), b);
+    updateVal(topRight(r, c), b);
+    updateVal(right(r, c), b);
+    updateVal(bottomRight(r, c), b);
+    updateVal(bottom(r, c), b);
+    updateVal(bottomLeft(r, c), b);
+    updateVal(left(r, c), b);
+    updateVal(topLeft(r, c), b);
   }
 
   public int surroundedAccessibleCnt(int r, int c) {

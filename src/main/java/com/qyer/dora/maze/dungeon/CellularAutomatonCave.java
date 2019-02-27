@@ -11,23 +11,34 @@ public class CellularAutomatonCave {
 
   private TileBasedMap map;
 
+  private int initBlockPercent;
+  private int foreachTimes;
+
   public TileBasedMap getMap() {
     return map;
   }
 
-  public CellularAutomatonCave(int row, int column) {
+  public CellularAutomatonCave(int row, int column, int initBlockPercent, int foreachTimes) {
     this.map = new TileBasedMap(row, column);
     this.map.border(Constants.BLOCK);
+    this.initBlockPercent = initBlockPercent;
+    this.foreachTimes = foreachTimes;
     randomFill();
   }
 
   private void randomFill() {
     for (int i = 1; i < map.lastRow(); i++) {
       for (int j = 1; j < map.lastColumn(); j++) {
-        if (Utils.generateBooleanProbability(40)) {
+        if (Utils.generateBooleanProbability(initBlockPercent)) {
           map.updateVal(i, j, Constants.BLOCK);
         }
       }
+    }
+  }
+
+  public void foreach() {
+    for (int i = 0; i < foreachTimes; i++) {
+      foreachOnce();
     }
   }
 
@@ -44,6 +55,10 @@ public class CellularAutomatonCave {
         } else {
           if (c >= 5) {
             map.updateVal(i, j, Constants.BLOCK);
+            map.updateVal(map.top(i, j), Constants.BLOCK);
+            map.updateVal(map.bottom(i, j), Constants.BLOCK);
+            map.updateVal(map.left(i, j), Constants.BLOCK);
+            map.updateVal(map.right(i, j), Constants.BLOCK);
           } else {
             map.updateVal(i, j, Constants.ACCESSIBLE);
           }
@@ -52,9 +67,4 @@ public class CellularAutomatonCave {
     }
   }
 
-  public static void main(String[] args) {
-    CellularAutomatonCave cave = new CellularAutomatonCave(30,100);
-    cave.foreachOnce();
-    Utils.dump(cave.map);
-  }
 }
