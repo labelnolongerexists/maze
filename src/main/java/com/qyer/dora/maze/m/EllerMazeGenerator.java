@@ -17,46 +17,45 @@ public class EllerMazeGenerator extends AbstractMazeGenerator {
 
   private int randomJoint;
 
-  public EllerMazeGenerator(int brushSize, int rowsColumns) {
-    super(brushSize, rowsColumns);
+  public EllerMazeGenerator(int rowsColumns) {
+    super(rowsColumns);
   }
 
-  public EllerMazeGenerator(int brushSize, int rows, int columns) {
-    super(brushSize, rows, columns);
+  public EllerMazeGenerator(int rows, int columns) {
+    super(rows, columns);
     int j = columns / 4;
     this.randomJoint = (j < 3) ? 3 : j;
   }
 
-  public static final EllerMazeGenerator createGenerator(int brushSize, int rowsColumns) {
-    return createGenerator(brushSize, rowsColumns, rowsColumns);
+  public static final EllerMazeGenerator createGenerator(int rowsColumns) {
+    return createGenerator(rowsColumns, rowsColumns);
   }
 
-  public static final EllerMazeGenerator createGenerator(int brushSize, int rows, int columns) {
+  public static final EllerMazeGenerator createGenerator(int rows, int columns) {
     int r = ((rows % 2) == 0) ? (rows + 1) : rows;
     int c = ((columns % 2) == 0) ? (columns + 1) : columns;
-    return new EllerMazeGenerator(brushSize, r, c);
+    return new EllerMazeGenerator(r, c);
   }
 
   @Override
   public void createMaze() throws Exception {
-    tileBasedMap.border(BLOCK);
+    grid.border(BLOCK);
     int s = 2;
-    for (int r = 1; r < tileBasedMap.getRows() - 1; r++) {
+    for (int r = 1; r < grid.getRows() - 1; r++) {
       // odd: create random area
       if ((r & 1) == 1) {
-        for (int c = tileBasedMap.firstColumn() + 1; c < tileBasedMap.lastColumn(); c += Utils
+        for (int c = grid.firstColumn() + 1; c < grid.lastColumn(); c += Utils
           .closedRandom(2, randomJoint) * s) {
-          tileBasedMap.updateVal(r, c - 1, BLOCK);
+          grid.updateVal(r, c - 1, BLOCK);
         }
       }
       // even: fill with h-walls
       else {
-        System.out.println("---------------------------------");
         // LastRowWall
         int lastWallCol, newWallCol = 0;
-        for (int c = tileBasedMap.firstColumn() + 1; c <= tileBasedMap.lastColumn(); c++) {
-          if (tileBasedMap.isBlocked(r - 1, c)) {
-            tileBasedMap.updateVal(r, c, H_BLOCK);
+        for (int c = grid.firstColumn() + 1; c <= grid.lastColumn(); c++) {
+          if (grid.isBlocked(r - 1, c)) {
+            grid.updateVal(r, c, H_BLOCK);
 
             lastWallCol = newWallCol;
             newWallCol = c;
@@ -77,22 +76,21 @@ public class EllerMazeGenerator extends AbstractMazeGenerator {
             int f = passageFrom, t;
             for (Integer p : sub) {
               t = p;
-              System.out.println(f + "/" + t);
-              tileBasedMap.updateRowSegment(r, f, t, H_BLOCK);
+              grid.updateRowSegment(r, f, t, H_BLOCK);
               f = t + 1;
             }
-            tileBasedMap.updateRowSegment(r, f, c, H_BLOCK);
-//            System.out.println(
-//              lastWallCol + " - " + newWallCol + " - " + candidates + " - selected: " + sub);
+            grid.updateRowSegment(r, f, c, H_BLOCK);
+            //            System.out.println(
+            //              lastWallCol + " - " + newWallCol + " - " + candidates + " - selected:
+            //              " + sub);
           }
         }
       }
-      tileBasedMap.updateRowSegment(tileBasedMap.lastRow() - 1, tileBasedMap.firstColumn() + 1, tileBasedMap
-                                      .lastColumn(),
-                                    ACCESSIBLE);
+      grid.updateRowSegment(grid.lastRow() - 1, grid.firstColumn() + 1, grid.lastColumn(),
+                            ACCESSIBLE);
     }
-    tileBasedMap.defaultEntrance();
-    tileBasedMap.defaultExit();
+    grid.defaultEntrance();
+    grid.defaultExit();
   }
 
 }

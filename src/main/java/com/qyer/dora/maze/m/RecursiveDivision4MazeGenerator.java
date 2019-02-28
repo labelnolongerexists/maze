@@ -23,45 +23,45 @@ public class RecursiveDivision4MazeGenerator extends AbstractMazeGenerator {
   private final int WALL_BOTTOM = 3;
   private List<Integer> WALLS = Lists.newArrayList(WALL_LEFT, WALL_TOP, WALL_RIGHT, WALL_BOTTOM);
 
-  public RecursiveDivision4MazeGenerator(int brushSize, int rowsColumns) {
-    this(brushSize, rowsColumns, rowsColumns);
+  public RecursiveDivision4MazeGenerator(int rowsColumns) {
+    this(rowsColumns, rowsColumns);
   }
 
-  public RecursiveDivision4MazeGenerator(int brushSize, int rows, int columns) {
-    super(brushSize, rows, columns);
-    tileBasedMap.border(BLOCK);
-    tileBasedMap.fill(ACCESSIBLE, 1, rows - 1, 1, columns - 1);
+  public RecursiveDivision4MazeGenerator(int rows, int columns) {
+    super(rows, columns);
+    grid.border(BLOCK);
+    grid.fill(ACCESSIBLE, 1, rows - 1, 1, columns - 1);
   }
 
   private void fillColumn(int rowFrom, int rowTo, int column, byte entity) {
-    int start = tileBasedMap.isAccessible(rowFrom - 1, column) ? rowFrom + 1 : rowFrom;
-    int to = tileBasedMap.isAccessible(rowTo + 1, column) ? rowTo - 1 : rowTo;
+    int start = grid.isAccessible(rowFrom - 1, column) ? rowFrom + 1 : rowFrom;
+    int to = grid.isAccessible(rowTo + 1, column) ? rowTo - 1 : rowTo;
     for (int i = start; i <= to; i++) {
-      for (int j = 0; j < tileBasedMap.getColumns(); j++) {
-        tileBasedMap.updateVal(i, column, entity);
+      for (int j = 0; j < grid.getColumns(); j++) {
+        grid.updateVal(i, column, entity);
       }
     }
   }
 
   private void fillRow(int columnFrom, int columnTo, int row, byte entity) {
     int start, to;
-    if (tileBasedMap.isAccessible(row, columnFrom - 1)) {
+    if (grid.isAccessible(row, columnFrom - 1)) {
       start = columnFrom + 1;
     } else {
       start = columnFrom;
     }
-    if (tileBasedMap.isAccessible(row, columnTo + 1)) {
+    if (grid.isAccessible(row, columnTo + 1)) {
       to = columnTo - 1;
     } else {
       to = columnTo;
     }
     for (int i = start; i <= to; i++) {
-      tileBasedMap.updateVal(row, i, entity);
+      grid.updateVal(row, i, entity);
     }
   }
 
   private void setDoor(int r, int c) {
-    tileBasedMap.updateVal(r, c, ACCESSIBLE);
+    grid.updateVal(r, c, ACCESSIBLE);
   }
 
   private boolean canSplit(int a, int b) {
@@ -94,9 +94,9 @@ public class RecursiveDivision4MazeGenerator extends AbstractMazeGenerator {
   }
 
   public void createMaze() throws IOException {
-    createMaze(0, tileBasedMap.getRows() - 1, 0, tileBasedMap.getColumns() - 1);
-    tileBasedMap.defaultEntrance();
-    tileBasedMap.defaultExit();
+    createMaze(0, grid.getRows() - 1, 0, grid.getColumns() - 1);
+    grid.defaultEntrance();
+    grid.defaultExit();
   }
 
   public void createMaze(int rFrom, int rTo, int cFrom, int cTo) throws IOException {

@@ -21,7 +21,6 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -52,9 +51,10 @@ public class Utils {
     return list.get(idx);
   }
 
-  public static BufferedImage makeImage(TileBasedMap tileBasedMap, int brushSize) {
-    int r = tileBasedMap.getRows(), c = tileBasedMap.getColumns();
-    int width = tileBasedMap.getColumns() * brushSize, height = tileBasedMap.getRows() * brushSize;
+  public static BufferedImage makeImage(TileBasedGrid tileBasedGrid, int brushSize) {
+    int r = tileBasedGrid.getRows(), c = tileBasedGrid.getColumns();
+    int width = tileBasedGrid.getColumns() * brushSize, height = tileBasedGrid
+      .getRows() * brushSize;
 
     final int b = brushSize, bd = DEFAULT_BORDER;
     // 创建BufferedImage对象
@@ -69,7 +69,7 @@ public class Utils {
       g2d.clearRect(0, 0, width + bd * 2, height + bd * 2);
       for (int i = 0; i < r; i++) {
         for (int j = 0; j < c; j++) {
-          if (tileBasedMap.isBlocked(tileBasedMap.getContent(i, j))) {
+          if (tileBasedGrid.isBlocked(tileBasedGrid.getContent(i, j))) {
             g2d.setPaint(C_BLOCKED);
             g2d.fillRect(bd + j * b, bd + i * b, b, b);
           } else {
@@ -91,9 +91,9 @@ public class Utils {
     return image;
   }
 
-  public static void writeMaze(TileBasedMap tileBasedMap, String path, int brushSize) throws
+  public static void writeMaze(TileBasedGrid tileBasedGrid, String path, int brushSize) throws
     Exception {
-    ImageIO.write(makeImage(tileBasedMap, brushSize), "png", new File(path + ".png"));
+    ImageIO.write(makeImage(tileBasedGrid, brushSize), "png", new File(path + ".png"));
   }
 
   public static final void printFileContentInClassPath(String filePath) {
@@ -118,10 +118,10 @@ public class Utils {
     return R.nextInt(100) < percentOfTrue;
   }
 
-  public static final void dump(TileBasedMap map) {
-    for (int i = 0; i < map.getRows(); i++) {
-      for (int j = 0; j < map.getColumns(); j++) {
-        switch (map.getContent(i, j)) {
+  public static final void dump(TileBasedGrid grid) {
+    for (int i = 0; i < grid.getRows(); i++) {
+      for (int j = 0; j < grid.getColumns(); j++) {
+        switch (grid.getContent(i, j)) {
           case ACCESSIBLE:
             System.out.print(ROAD);
             break;
@@ -137,30 +137,6 @@ public class Utils {
         }
       }
       System.out.println();
-    }
-  }
-
-  public static void main(String[] args) throws IOException {
-    int a = 100, aa = 110;
-    BufferedImage image = new BufferedImage(aa, aa, BufferedImage.TYPE_INT_RGB);
-    // 获取Graphics2D
-    String f = "/Users/WuZijing/tmp_data/maze/oval.png";
-    Graphics2D g2d = null;
-    try (OutputStream os = new FileOutputStream(new File(f))) {
-      g2d = image.createGraphics();
-      // 画图
-      g2d.setBackground(C_BACKGROUND);
-      g2d.clearRect(0, 0, aa, aa);
-      g2d.setPaint(C_BLOCKED);
-      g2d.fillOval(5, 5, a, a);
-      g2d.setPaint(C_BACKGROUND);
-      g2d.fillOval(10, 10, 90, 90);
-      Utils.writeImage(image, "png", os);
-    } finally {
-      //释放对象
-      if (g2d != null) {
-        g2d.dispose();
-      }
     }
   }
 

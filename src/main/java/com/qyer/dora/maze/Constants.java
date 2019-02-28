@@ -30,8 +30,8 @@ public class Constants {
   private static final int C1 = 0x1e;
   private static final int C2 = 0xda;
 
-  public static final Color C_BLOCKED = new Color(67, 67, 67);
-  public static final Color C_ACCESSIBLE = new Color(189, 192, 186);
+  public static final Color C_BLOCKED = new Color(127, 137, 157);
+  public static final Color C_ACCESSIBLE = new Color(219, 212, 206);
   public static final Color C_BACKGROUND = C_ACCESSIBLE;
 
   public static final int DEFAULT_BORDER = 10;

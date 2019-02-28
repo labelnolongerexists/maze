@@ -7,7 +7,7 @@ import com.qyer.dora.shape.RCPoint;
 /**
  * User: Z J Wu Date: 2019-02-25 Time: 10:23 Package: com.qyer.dora.maze.generator
  */
-public class TileBasedMap {
+public class TileBasedGrid {
 
   public static final RCPoint DEFAULT_ENTRANCE = new RCPoint(1, 0);
 
@@ -16,14 +16,18 @@ public class TileBasedMap {
 
   private final byte[][] store;
 
-  public TileBasedMap(int rows, int columns) {
+  public TileBasedGrid(int rows, int columns) {
     this.rows = rows;
     this.columns = columns;
     this.store = new byte[rows][columns];
   }
 
-  public TileBasedMap(int rowsColumns) {
+  public TileBasedGrid(int rowsColumns) {
     this(rowsColumns, rowsColumns);
+  }
+
+  public boolean isBorder(int r, int c) {
+    return r <= firstRow() || r >= lastRow() || c <= firstColumn() || c >= lastColumn();
   }
 
   public void border(byte border) {
@@ -137,35 +141,67 @@ public class TileBasedMap {
   }
 
   public RCPoint top(int r, int c) {
-    return new RCPoint(r - 1, c);
+    return top(r, c, 1);
+  }
+
+  public RCPoint top(int r, int c, int step) {
+    return new RCPoint(r - step, c);
   }
 
   public RCPoint topRight(int r, int c) {
-    return new RCPoint(r - 1, c + 1);
+    return topRight(r, c, 1);
+  }
+
+  public RCPoint topRight(int r, int c, int step) {
+    return new RCPoint(r - step, c + step);
   }
 
   public RCPoint right(int r, int c) {
-    return new RCPoint(r, c + 1);
+    return right(r, c, 1);
+  }
+
+  public RCPoint right(int r, int c, int step) {
+    return new RCPoint(r, c + step);
   }
 
   public RCPoint bottomRight(int r, int c) {
-    return new RCPoint(r + 1, c + 1);
+    return bottomRight(r, c, 1);
+  }
+
+  public RCPoint bottomRight(int r, int c, int step) {
+    return new RCPoint(r + step, c + step);
   }
 
   public RCPoint bottom(int r, int c) {
-    return new RCPoint(r + 1, c);
+    return bottom(r, c, 1);
+  }
+
+  public RCPoint bottom(int r, int c, int step) {
+    return new RCPoint(r + step, c);
   }
 
   public RCPoint bottomLeft(int r, int c) {
-    return new RCPoint(r + 1, c - 1);
+    return bottomLeft(r, c, 1);
+  }
+
+  public RCPoint bottomLeft(int r, int c, int step) {
+    return new RCPoint(r + step, c - step);
   }
 
   public RCPoint left(int r, int c) {
-    return new RCPoint(r, c - 1);
+    return left(r, c, 1);
+  }
+
+  public RCPoint left(int r, int c, int step) {
+    return new RCPoint(r, c - step);
   }
 
   public RCPoint topLeft(int r, int c) {
-    return new RCPoint(r - 1, c - 1);
+    return topLeft(r, c, 1);
+  }
+
+  public RCPoint topLeft(int r, int c, int step) {
+    return new RCPoint(r - step, c - step);
   }
 
   public void updateSurrounded(int r, int c, byte b) {

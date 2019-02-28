@@ -5,7 +5,7 @@ import static com.qyer.dora.maze.Constants.BRUSH_THICK;
 import static com.qyer.dora.maze.Constants.BRUSH_THIN;
 import static com.qyer.dora.maze.Constants.DEFAULT_MAZE_WIDTH;
 
-import com.qyer.dora.maze.TileBasedMap;
+import com.qyer.dora.maze.TileBasedGrid;
 import com.qyer.dora.maze.Utils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -40,17 +40,17 @@ public abstract class TileBasedMazeServlet extends HttpServlet {
     } else if (brush > BRUSH_THICK) {
       brush = BRUSH_THICK;
     }
-    TileBasedMap tileBasedMap = null;
+    TileBasedGrid tileBasedGrid = null;
     try {
-      tileBasedMap = generateMaze(req, resp, width, height);
+      tileBasedGrid = generateMaze(req, resp, width, height);
     } catch (Exception e) {
       e.printStackTrace();
     }
-    BufferedImage image = Utils.makeImage(tileBasedMap, brush);
+    BufferedImage image = Utils.makeImage(tileBasedGrid, brush);
     resp.setContentType("image/png");
     Utils.writeImage(image, "png", resp.getOutputStream());
   }
 
-  protected abstract TileBasedMap generateMaze(HttpServletRequest req, HttpServletResponse resp,
-                                               int width, int height) throws Exception;
+  protected abstract TileBasedGrid generateMaze(HttpServletRequest req, HttpServletResponse resp,
+                                                int width, int height) throws Exception;
 }

@@ -21,19 +21,19 @@ public class PrimMazeGenerator extends AbstractMazeGenerator {
 
   private static final int STEP = 2;
 
-  private PrimMazeGenerator(int brushSize, int rows, int columns) {
-    super(brushSize, rows, columns);
-    tileBasedMap.fill(BLOCK, 0, rows, 0, columns);
+  private PrimMazeGenerator(int rows, int columns) {
+    super(rows, columns);
+    grid.fill(BLOCK, 0, rows, 0, columns);
   }
 
-  public static final PrimMazeGenerator createGenerator(int brushSize, int rowsColumns) {
-    return createGenerator(brushSize, rowsColumns, rowsColumns);
+  public static final PrimMazeGenerator createGenerator(int rowsColumns) {
+    return createGenerator(rowsColumns, rowsColumns);
   }
 
-  public static final PrimMazeGenerator createGenerator(int brushSize, int rows, int columns) {
+  public static final PrimMazeGenerator createGenerator(int rows, int columns) {
     int r = ((rows % 2) == 0) ? (rows + 1) : rows;
     int c = ((columns % 2) == 0) ? (columns + 1) : columns;
-    return new PrimMazeGenerator(brushSize, r, c);
+    return new PrimMazeGenerator(r, c);
   }
 
   private void tryAddPoint(LinkedBlockingQueue<RCPoint> q, Set<RCPoint> visited, RCPoint p) {
@@ -50,32 +50,32 @@ public class PrimMazeGenerator extends AbstractMazeGenerator {
     while (CollectionUtils.isNotEmpty(candidate)) {
       RCSegment rcSegment = candidate.remove(R.nextInt(candidate.size()));
       RCPoint frontier = rcSegment.getFrom(), wall = rcSegment.getTo();
-      if (tileBasedMap.isAccessible(frontier)) {
+      if (grid.isAccessible(frontier)) {
         continue;
       }
-      tileBasedMap.updateVal(frontier, ACCESSIBLE);
-      tileBasedMap.updateVal(wall, ACCESSIBLE);
+      grid.updateVal(frontier, ACCESSIBLE);
+      grid.updateVal(wall, ACCESSIBLE);
       int row = frontier.getRow(), col = frontier.getColumn();
-      if (row >= tileBasedMap.firstRow() + STEP && tileBasedMap.isBlocked(row - STEP, col)) {
+      if (row >= grid.firstRow() + STEP && grid.isBlocked(row - STEP, col)) {
         candidate
           .add(new RCSegment(new RCPoint(row - STEP, col), new RCPoint(row - STEP + 1, col)));
       }
-      if (col >= tileBasedMap.firstColumn() + STEP && tileBasedMap.isBlocked(row, col - STEP)) {
+      if (col >= grid.firstColumn() + STEP && grid.isBlocked(row, col - STEP)) {
         candidate
           .add(new RCSegment(new RCPoint(row, col - STEP), new RCPoint(row, col - STEP + 1)));
       }
-      if (row <= tileBasedMap.lastRow() - STEP && tileBasedMap.isBlocked(row + STEP, col)) {
+      if (row <= grid.lastRow() - STEP && grid.isBlocked(row + STEP, col)) {
         candidate
           .add(new RCSegment(new RCPoint(row + STEP, col), new RCPoint(row + STEP - 1, col)));
       }
-      if (col <= tileBasedMap.lastColumn() - STEP && tileBasedMap.isBlocked(row, col + STEP)) {
+      if (col <= grid.lastColumn() - STEP && grid.isBlocked(row, col + STEP)) {
         candidate
           .add(new RCSegment(new RCPoint(row, col + STEP), new RCPoint(row, col + STEP - 1)));
       }
     }
-    tileBasedMap.border(BLOCK);
-    tileBasedMap.defaultEntrance();
-    tileBasedMap.defaultExit();
+    grid.border(BLOCK);
+    grid.defaultEntrance();
+    grid.defaultExit();
   }
 
 }

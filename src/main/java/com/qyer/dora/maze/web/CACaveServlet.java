@@ -2,7 +2,7 @@ package com.qyer.dora.maze.web;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.qyer.dora.maze.TileBasedMap;
+import com.qyer.dora.maze.TileBasedGrid;
 import com.qyer.dora.maze.dungeon.CellularAutomatonCave;
 import org.apache.commons.lang3.StringUtils;
 
@@ -21,8 +21,8 @@ public class CACaveServlet extends TileBasedMazeServlet {
   }
 
   @Override
-  protected TileBasedMap generateMaze(HttpServletRequest req, HttpServletResponse resp, int width,
-                                      int height) throws IOException {
+  protected TileBasedGrid generateMaze(HttpServletRequest req, HttpServletResponse resp, int width,
+                                       int height) throws IOException {
     String p = StringUtils.trimToEmpty(req.getParameter("p"));
     int initBlockPercent = StringUtils.isBlank(p) ? 40 : Integer.parseInt(p);
     p = StringUtils.trimToEmpty(req.getParameter("f"));

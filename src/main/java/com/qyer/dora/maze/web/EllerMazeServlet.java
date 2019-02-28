@@ -2,7 +2,7 @@ package com.qyer.dora.maze.web;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.qyer.dora.maze.TileBasedMap;
+import com.qyer.dora.maze.TileBasedGrid;
 import com.qyer.dora.maze.m.EllerMazeGenerator;
 
 import javax.servlet.http.HttpServletRequest;
@@ -19,11 +19,11 @@ public class EllerMazeServlet extends TileBasedMazeServlet {
   }
 
   @Override
-  protected TileBasedMap generateMaze(HttpServletRequest req, HttpServletResponse resp, int width,
-                                      int height) throws Exception {
+  protected TileBasedGrid generateMaze(HttpServletRequest req, HttpServletResponse resp, int width,
+                                       int height) throws Exception {
     EllerMazeGenerator g = EllerMazeGenerator.createGenerator(height, width);
     g.createMaze();
-    return g.getTileBasedMap();
+    return g.getGrid();
   }
 
 }

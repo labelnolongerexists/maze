@@ -1,7 +1,7 @@
 package com.qyer.dora.maze.dungeon;
 
 import com.qyer.dora.maze.Constants;
-import com.qyer.dora.maze.TileBasedMap;
+import com.qyer.dora.maze.TileBasedGrid;
 import com.qyer.dora.maze.Utils;
 
 /**
@@ -9,17 +9,17 @@ import com.qyer.dora.maze.Utils;
  */
 public class CellularAutomatonCave {
 
-  private TileBasedMap map;
+  private TileBasedGrid map;
 
   private int initBlockPercent;
   private int foreachTimes;
 
-  public TileBasedMap getMap() {
+  public TileBasedGrid getMap() {
     return map;
   }
 
   public CellularAutomatonCave(int row, int column, int initBlockPercent, int foreachTimes) {
-    this.map = new TileBasedMap(row, column);
+    this.map = new TileBasedGrid(row, column);
     this.map.border(Constants.BLOCK);
     this.initBlockPercent = initBlockPercent;
     this.foreachTimes = foreachTimes;
