@@ -2,10 +2,6 @@ package com.qyer.dora.maze;
 
 import static com.qyer.dora.maze.Constants.ACCESSIBLE;
 import static com.qyer.dora.maze.Constants.BLOCK;
-import static com.qyer.dora.maze.Constants.C_ACCESSIBLE;
-import static com.qyer.dora.maze.Constants.C_BACKGROUND;
-import static com.qyer.dora.maze.Constants.C_BLOCKED;
-import static com.qyer.dora.maze.Constants.DEFAULT_BORDER;
 import static com.qyer.dora.maze.Constants.G_WALL;
 import static com.qyer.dora.maze.Constants.H_BLOCK;
 import static com.qyer.dora.maze.Constants.H_WALL;
@@ -16,14 +12,9 @@ import static com.qyer.dora.maze.Constants.V_WALL;
 
 import org.apache.commons.collections4.CollectionUtils;
 
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.util.List;
 
 /**
@@ -38,10 +29,10 @@ public class Utils {
     return R.nextInt(toClosed + 1 - fromClosed) + fromClosed;
   }
 
-  public static final void writeImage(BufferedImage image, String format,
-                                      OutputStream outputStream) throws IOException {
-    ImageIO.write(image, format, outputStream);
-  }
+  //  public static final void writeImage(BufferedImage image, String format,
+  //                                      OutputStream outputStream) throws IOException {
+  //    ImageIO.write(image, format, outputStream);
+  //  }
 
   public static final <T> T selectOne(List<T> list) {
     if (CollectionUtils.isEmpty(list)) {
@@ -51,50 +42,50 @@ public class Utils {
     return list.get(idx);
   }
 
-  public static BufferedImage makeImage(TileBasedGrid tileBasedGrid, int brushSize) {
-    int r = tileBasedGrid.getRows(), c = tileBasedGrid.getColumns();
-    int width = tileBasedGrid.getColumns() * brushSize, height = tileBasedGrid
-      .getRows() * brushSize;
+  //  public static BufferedImage makeImage(TileBasedGrid tileBasedGrid, int brushSize) {
+  //    int r = tileBasedGrid.getRows(), c = tileBasedGrid.getColumns();
+  //    int width = tileBasedGrid.getColumns() * brushSize, height = tileBasedGrid
+  //      .getRows() * brushSize;
+  //
+  //    final int b = brushSize, bd = DEFAULT_BORDER;
+  //    // 创建BufferedImage对象
+  //    BufferedImage image = new BufferedImage(width + bd * 2, height + bd * 2,
+  //                                            BufferedImage.TYPE_INT_RGB);
+  //    // 获取Graphics2D
+  //    Graphics2D g2d = null;
+  //    try {
+  //      g2d = image.createGraphics();
+  //      // 画图
+  //      g2d.setBackground(C_BACKGROUND);
+  //      g2d.clearRect(0, 0, width + bd * 2, height + bd * 2);
+  //      for (int i = 0; i < r; i++) {
+  //        for (int j = 0; j < c; j++) {
+  //          if (tileBasedGrid.isBlocked(tileBasedGrid.getContent(i, j))) {
+  //            g2d.setPaint(C_BLOCKED);
+  //            g2d.fillRect(bd + j * b, bd + i * b, b, b);
+  //          } else {
+  //            g2d.setPaint(C_ACCESSIBLE);
+  //            g2d.fillRect(bd + j * b, bd + i * b, b, b);
+  //          }
+  //        }
+  //        g2d.setPaint(C_ACCESSIBLE);
+  //        g2d.fillRect(bd + c * b, bd + i * b, b, b);
+  //      }
+  //      g2d.setPaint(C_ACCESSIBLE);
+  //      g2d.fillRect(height + bd, 0, width, bd);
+  //    } finally {
+  //      //释放对象
+  //      if (g2d != null) {
+  //        g2d.dispose();
+  //      }
+  //    }
+  //    return image;
+  //  }
 
-    final int b = brushSize, bd = DEFAULT_BORDER;
-    // 创建BufferedImage对象
-    BufferedImage image = new BufferedImage(width + bd * 2, height + bd * 2,
-                                            BufferedImage.TYPE_INT_RGB);
-    // 获取Graphics2D
-    Graphics2D g2d = null;
-    try {
-      g2d = image.createGraphics();
-      // 画图
-      g2d.setBackground(C_BACKGROUND);
-      g2d.clearRect(0, 0, width + bd * 2, height + bd * 2);
-      for (int i = 0; i < r; i++) {
-        for (int j = 0; j < c; j++) {
-          if (tileBasedGrid.isBlocked(tileBasedGrid.getContent(i, j))) {
-            g2d.setPaint(C_BLOCKED);
-            g2d.fillRect(bd + j * b, bd + i * b, b, b);
-          } else {
-            g2d.setPaint(C_ACCESSIBLE);
-            g2d.fillRect(bd + j * b, bd + i * b, b, b);
-          }
-        }
-        g2d.setPaint(C_ACCESSIBLE);
-        g2d.fillRect(bd + c * b, bd + i * b, b, b);
-      }
-      g2d.setPaint(C_ACCESSIBLE);
-      g2d.fillRect(height + bd, 0, width, bd);
-    } finally {
-      //释放对象
-      if (g2d != null) {
-        g2d.dispose();
-      }
-    }
-    return image;
-  }
-
-  public static void writeMaze(TileBasedGrid tileBasedGrid, String path, int brushSize) throws
-    Exception {
-    ImageIO.write(makeImage(tileBasedGrid, brushSize), "png", new File(path + ".png"));
-  }
+  //  public static void writeMaze(TileBasedGrid tileBasedGrid, String path, int brushSize) throws
+  //    Exception {
+  //    ImageIO.write(makeImage(tileBasedGrid, brushSize), "png", new File(path + ".png"));
+  //  }
 
   public static final void printFileContentInClassPath(String filePath) {
     try (BufferedReader br = new BufferedReader(

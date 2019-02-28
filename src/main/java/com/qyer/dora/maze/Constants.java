@@ -1,6 +1,5 @@
 package com.qyer.dora.maze;
 
-import java.awt.*;
 import java.util.Random;
 
 /**
@@ -30,9 +29,9 @@ public class Constants {
   private static final int C1 = 0x1e;
   private static final int C2 = 0xda;
 
-  public static final Color C_BLOCKED = new Color(100, 100, 100);
-  public static final Color C_ACCESSIBLE = new Color(255, 255, 255);
-  public static final Color C_BACKGROUND = C_ACCESSIBLE;
+  //  public static final Color C_BLOCKED = new Color(100, 100, 100);
+  //  public static final Color C_ACCESSIBLE = new Color(255, 255, 255);
+  //  public static final Color C_BACKGROUND = C_ACCESSIBLE;
 
   public static final int DEFAULT_BORDER = 10;
 }

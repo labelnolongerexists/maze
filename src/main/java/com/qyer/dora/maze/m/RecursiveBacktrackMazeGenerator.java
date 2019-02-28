@@ -88,7 +88,7 @@ public class RecursiveBacktrackMazeGenerator extends AbstractMazeGenerator {
   }
 
   public static void main(String[] args) throws Exception {
-    RecursiveBacktrackMazeGenerator g = RecursiveBacktrackMazeGenerator.createGenerator(9, 20);
+    RecursiveBacktrackMazeGenerator g = RecursiveBacktrackMazeGenerator.createGenerator(10, 20);
     g.createMaze();
     System.out.println("---------------------------------");
     Utils.dump(g.grid);

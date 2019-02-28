@@ -248,4 +248,18 @@ public class TileBasedGrid {
     return cnt;
   }
 
+  public String toPlainStr() {
+    StringBuilder sb = new StringBuilder();
+    for (int r = 0; r < rows; r++) {
+      for (int c = 0; c < columns; c++) {
+        if (isAccessible(r, c)) {
+          sb.append('0');
+        } else {
+          sb.append('1');
+        }
+      }
+    }
+    return sb.toString();
+  }
+
 }
