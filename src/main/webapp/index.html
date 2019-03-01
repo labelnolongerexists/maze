@@ -9,9 +9,9 @@
 
 <div style="text-align:center">
   <label for="input_width">Width:</label>
-  <input id="input_width" type="text" value="16"/>
+  <input id="input_width" type="text" value="80"/>
   <label for="input_height">Height:</label>
-  <input id="input_height" type="text" value="9"/>
+  <input id="input_height" type="text" value="45"/>
   <label for="input_brush">BrushSize:</label>
   <input id="input_brush" type="text" value="4"/>
 
@@ -31,8 +31,8 @@
 </div>
 
 <hr/>
-<div>
-  <canvas id="draw_canvas"></canvas>
+<div id="maze_container" data-maze-width="" data-maze-height="">
+  <canvas id="draw_canvas" width="1280" height="600"></canvas>
 </div>
 <script>
   var ACCESSIBLE = '#e3e3e3', BLOCKED = '#3e3e3e', BORDER = ACCESSIBLE;
@@ -53,11 +53,16 @@
         var data = resp['data'];
         var rows = resp['rows'];
         var cols = resp['columns'];
-        var bd = 5, b = brush;
+        var bd = 3, b = brush;
 
         var canvas = j('#draw_canvas')[0];
         var ctx = canvas.getContext("2d");
-        ctx.clearRect(0, 0, 1000, 800);
+        var totalWidth = 2 * bd + b * cols, totalHeight = 2 * bd + b * rows;
+        //ctx.clearRect(0, 0, totalWidth, totalHeight);
+
+        j('#maze_container').attr('data-maze-width', totalWidth);
+        j('#maze_container').attr('data-maze-height', totalHeight);
+
         // Draw border
         ctx.fillStyle = BORDER;
         ctx.fillRect(0, 0, 2 * bd + b * cols, bd);
