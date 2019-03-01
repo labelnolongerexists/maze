@@ -15,6 +15,10 @@ public class RCPoint {
     this.column = column;
   }
 
+  public static final RCPoint of(int r, int c) {
+    return new RCPoint(r, c);
+  }
+
   public int getRow() {
     return row;
   }
@@ -23,32 +27,68 @@ public class RCPoint {
     return column;
   }
 
-  public static RCPoint topNeighbor(RCPoint p, int topBorder) {
-    if (p.getRow() - 1 < topBorder) {
-      return null;
-    }
-    return new RCPoint(p.getRow() - 1, p.getColumn());
+  public static RCPoint top(int r, int c) {
+    return top(r, c, 1);
   }
 
-  public static RCPoint underNeighbor(RCPoint p, int underBorder) {
-    if (p.getRow() + 1 > underBorder) {
-      return null;
-    }
-    return new RCPoint(p.getRow() + 1, p.getColumn());
+  public static RCPoint top(int r, int c, int step) {
+    return new RCPoint(r - step, c);
   }
 
-  public static RCPoint leftNeighbor(RCPoint p, int leftBorder) {
-    if (p.getColumn() - 1 < leftBorder) {
-      return null;
-    }
-    return new RCPoint(p.getRow(), p.getColumn() - 1);
+  public static RCPoint topRight(int r, int c) {
+    return topRight(r, c, 1);
   }
 
-  public static RCPoint rightNeighbor(RCPoint p, int rightBorder) {
-    if (p.getColumn() + 1 > rightBorder) {
-      return null;
-    }
-    return new RCPoint(p.getRow(), p.getColumn() + 1);
+  public static RCPoint topRight(int r, int c, int step) {
+    return new RCPoint(r - step, c + step);
+  }
+
+  public static RCPoint right(int r, int c) {
+    return right(r, c, 1);
+  }
+
+  public static RCPoint right(int r, int c, int step) {
+    return new RCPoint(r, c + step);
+  }
+
+  public static RCPoint bottomRight(int r, int c) {
+    return bottomRight(r, c, 1);
+  }
+
+  public static RCPoint bottomRight(int r, int c, int step) {
+    return new RCPoint(r + step, c + step);
+  }
+
+  public static RCPoint bottom(int r, int c) {
+    return bottom(r, c, 1);
+  }
+
+  public static RCPoint bottom(int r, int c, int step) {
+    return new RCPoint(r + step, c);
+  }
+
+  public static RCPoint bottomLeft(int r, int c) {
+    return bottomLeft(r, c, 1);
+  }
+
+  public static RCPoint bottomLeft(int r, int c, int step) {
+    return new RCPoint(r + step, c - step);
+  }
+
+  public static RCPoint left(int r, int c) {
+    return left(r, c, 1);
+  }
+
+  public static RCPoint left(int r, int c, int step) {
+    return new RCPoint(r, c - step);
+  }
+
+  public static RCPoint topLeft(int r, int c) {
+    return topLeft(r, c, 1);
+  }
+
+  public static RCPoint topLeft(int r, int c, int step) {
+    return new RCPoint(r - step, c - step);
   }
 
   @Override

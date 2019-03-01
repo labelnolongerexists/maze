@@ -22,6 +22,10 @@ import java.util.List;
  */
 public class Utils {
 
+  public static boolean between(int t, int x, int y) {
+    return (t >= x) && (t <= y);
+  }
+
   public static final int closedRandom(int fromClosed, int toClosed) {
     if (fromClosed > toClosed) {
       return fromClosed;
