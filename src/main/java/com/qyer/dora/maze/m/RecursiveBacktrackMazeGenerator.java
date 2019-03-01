@@ -69,19 +69,19 @@ public class RecursiveBacktrackMazeGenerator extends AbstractMazeGenerator {
       switch (d) {
         case 0:
           //          System.out.println(to + " - Dig left");
-          makePassage(new RCSegment(grid.left(rT, cT, 1), grid.left(rT, cT, 2)));
+          makePassage(new RCSegment(RCPoint.left(rT, cT, 1), RCPoint.left(rT, cT, 2)));
           break;
         case 1:
           //          System.out.println(to + " - Dig right");
-          makePassage(new RCSegment(grid.right(rT, cT, 1), grid.right(rT, cT, 2)));
+          makePassage(new RCSegment(RCPoint.right(rT, cT, 1), RCPoint.right(rT, cT, 2)));
           break;
         case 2:
           //          System.out.println(to + " - Dig up");
-          makePassage(new RCSegment(grid.top(rT, cT, 1), grid.top(rT, cT, 2)));
+          makePassage(new RCSegment(RCPoint.top(rT, cT, 1), RCPoint.top(rT, cT, 2)));
           break;
         case 3:
           //          System.out.println(to + " - Dig down");
-          makePassage(new RCSegment(grid.bottom(rT, cT, 1), grid.bottom(rT, cT, 2)));
+          makePassage(new RCSegment(RCPoint.bottom(rT, cT, 1), RCPoint.bottom(rT, cT, 2)));
           break;
       }
     }

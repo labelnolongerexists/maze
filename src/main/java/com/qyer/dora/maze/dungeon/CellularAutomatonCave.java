@@ -3,6 +3,7 @@ package com.qyer.dora.maze.dungeon;
 import com.qyer.dora.maze.Constants;
 import com.qyer.dora.maze.TileBasedGrid;
 import com.qyer.dora.maze.Utils;
+import com.qyer.dora.shape.RCPoint;
 
 /**
  * User: Z J Wu Date: 2019-02-26 Time: 18:31 Package: com.qyer.dora.maze.dungeon
@@ -55,10 +56,10 @@ public class CellularAutomatonCave {
         } else {
           if (c >= 5) {
             map.updateVal(i, j, Constants.BLOCK);
-            map.updateVal(map.top(i, j), Constants.BLOCK);
-            map.updateVal(map.bottom(i, j), Constants.BLOCK);
-            map.updateVal(map.left(i, j), Constants.BLOCK);
-            map.updateVal(map.right(i, j), Constants.BLOCK);
+            map.updateVal(RCPoint.top(i, j), Constants.BLOCK);
+            map.updateVal(RCPoint.bottom(i, j), Constants.BLOCK);
+            map.updateVal(RCPoint.left(i, j), Constants.BLOCK);
+            map.updateVal(RCPoint.right(i, j), Constants.BLOCK);
           } else {
             map.updateVal(i, j, Constants.ACCESSIBLE);
           }

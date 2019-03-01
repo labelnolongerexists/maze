@@ -12,10 +12,12 @@
   <input id="input_width" type="text" value="80"/>
   <label for="input_height">Height:</label>
   <input id="input_height" type="text" value="45"/>
+  <!--
   <label for="input_brush">BrushSize:</label>
   <input id="input_brush" type="text" value="4"/>
+  -->
 
-  <label for="input_brush">Type:</label>
+  <label for="select_m_type">Type:</label>
   <select id="select_m_type" name="m_type">
     <optgroup label="Maze">
       <option value="rb">RecursiveBacktracking</option>
@@ -31,15 +33,17 @@
 </div>
 
 <hr/>
-<div id="maze_container" data-maze-width="" data-maze-height="">
-  <canvas id="draw_canvas" width="1280" height="600"></canvas>
+<div style="text-align: center">
+  <canvas id="draw_canvas"></canvas>
 </div>
 <script>
-  var ACCESSIBLE = '#e3e3e3', BLOCKED = '#3e3e3e', BORDER = ACCESSIBLE;
+  var ACCESSIBLE = '#ffffff', BLOCKED = '#000000', BORDER = ACCESSIBLE;
 
   var j = jQuery.noConflict();
   j('#btn_draw').bind("click", function () {
-    var width = j('#input_width').val(), height = j('#input_height').val(), brush = j('#input_brush').val();
+    var width = j('#input_width').val(), height = j('#input_height').val();
+    // var brush = j('#input_brush').val();
+    var brush = 10;
     var mType = j('#select_m_type').val();
     var url = '/dora/maze/';
 
@@ -54,14 +58,20 @@
         var rows = resp['rows'];
         var cols = resp['columns'];
         var bd = 3, b = brush;
+        var totalWidth = 2 * bd + b * cols, totalHeight = 2 * bd + b * rows;
+
+        j('#draw_canvas').attr('width', totalWidth);
+        j('#draw_canvas').attr('height', totalHeight);
+
 
         var canvas = j('#draw_canvas')[0];
         var ctx = canvas.getContext("2d");
-        var totalWidth = 2 * bd + b * cols, totalHeight = 2 * bd + b * rows;
+        console.log('TotalWidth - ' + totalWidth);
+        console.log('TotalHeight - ' + totalHeight);
         //ctx.clearRect(0, 0, totalWidth, totalHeight);
 
-        j('#maze_container').attr('data-maze-width', totalWidth);
-        j('#maze_container').attr('data-maze-height', totalHeight);
+        // j('#maze_container').attr('data-maze-width', totalWidth);
+        // j('#maze_container').attr('data-maze-height', totalHeight);
 
         // Draw border
         ctx.fillStyle = BORDER;
