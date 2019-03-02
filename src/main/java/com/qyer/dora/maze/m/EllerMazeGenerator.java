@@ -45,7 +45,7 @@ public class EllerMazeGenerator extends AbstractMazeGenerator {
       // odd: create random area
       if ((r & 1) == 1) {
         for (int c = grid.firstColumn() + 1; c < grid.lastColumn(); c += Utils
-          .closedRandom(2, randomJoint) * s) {
+          .closedRandom(1, grid.getColumns()/2) * s) {
           grid.updateVal(r, c - 1, BLOCK);
         }
       }

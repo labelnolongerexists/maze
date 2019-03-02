@@ -9,7 +9,7 @@
 
 <div style="text-align:center">
   <label for="input_width">Width:</label>
-  <input id="input_width" type="text" value="80"/>
+  <input id="input_width" type="text" value="120"/>
   <label for="input_height">Height:</label>
   <input id="input_height" type="text" value="45"/>
   <!--
@@ -37,7 +37,7 @@
   <canvas id="draw_canvas"></canvas>
 </div>
 <script>
-  var ACCESSIBLE = '#ffffff', BLOCKED = '#000000', BORDER = ACCESSIBLE;
+  var ACCESSIBLE = '#ffffff', BLOCKED = '#5f5f5f', BORDER = ACCESSIBLE;
 
   var j = jQuery.noConflict();
   j('#btn_draw').bind("click", function () {
